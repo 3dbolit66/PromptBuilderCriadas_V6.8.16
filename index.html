@@ -1,0 +1,947 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prompt Builder Criadas V6.8.16 Stable + módulos 7.0.17</title>
+<link rel="icon" type="image/png" href="PromptBuilderCriadas_Icon.png">
+<link rel="apple-touch-icon" href="PromptBuilderCriadas_Icon.png">
+<style>body{margin:0;font-family:Arial,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f1ea;color:#24201c}header{background:white;padding:18px;border-bottom:1px solid #ded4c8}main{max-width:1100px;margin:18px auto;padding:0 14px}section{background:#fffaf3;border:1px solid #ded4c8;border-radius:18px;padding:18px;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}label{display:block;font-weight:700;margin:8px 0}select,textarea{width:100%;margin-top:6px;border:1px solid #ded4c8;border-radius:12px;padding:10px;background:white;font-size:14px}textarea{min-height:460px;font-family:Menlo,Consolas,monospace;font-size:12px}button{border:0;border-radius:14px;background:#e8ded1;padding:11px 14px;font-weight:800;cursor:pointer;margin:4px}button.primary{background:#8b6f57;color:white}#status{padding:10px;border:1px solid #ded4c8;border-radius:12px;background:white;margin-bottom:12px}
+.preset-dialog{border:0;border-radius:18px;padding:0;max-width:520px;width:calc(100% - 36px);background:#fbf7f0;color:#211f1c;box-shadow:0 18px 60px rgba(0,0,0,.28)}.preset-dialog::backdrop{background:rgba(0,0,0,.42)}.preset-dialog-inner{padding:24px}.preset-dialog h3{margin:0 0 18px;font-size:28px}.preset-dialog select{width:100%;font-size:18px;padding:14px;border:1px solid #cfc5b8;border-radius:12px;background:white}.preset-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}.preset-dialog-actions button{margin:0}
+</style>
+<script>
+const ACTIVITIES_BY_LOCATION = {"dining_room": [{"v": "setting the dining table", "t": "Poner la mesa del comedor"}, {"v": "clearing the dining table", "t": "Recoger la mesa del comedor"}, {"v": "polishing silverware", "t": "Pulir la cubertería de plata"}, {"v": "arranging crystal glasses", "t": "Colocar copas de cristal"}, {"v": "folding linen napkins", "t": "Doblar servilletas de lino"}, {"v": "replacing floral centerpieces", "t": "Cambiar centros florales"}, {"v": "checking table alignment", "t": "Comprobar la alineación de la mesa"}, {"v": "preparing room before guests arrive", "t": "Preparar el comedor antes de la llegada de invitados"}, {"v": "serving afternoon tea", "t": "Servir el té de la tarde"}, {"v": "collecting dishes after service", "t": "Recoger platos después del servicio"}, {"v": "lighting candles", "t": "Encender velas"}, {"v": "serving dishes from kitchen", "t": "Servir platos desde la cocina al comedor"}, {"v": "offering wine during meal", "t": "Ofrecer vino durante la comida"}, {"v": "offering water during meal", "t": "Ofrecer agua durante la comida"}, {"v": "offering bread during meal", "t": "Ofrecer pan durante la comida"}, {"v": "unloading dirty dishes to kitchen", "t": "Llevar la vajilla sucia a la cocina"}, {"v": "laying out tablecloths", "t": "Extender manteles limpios y sin arrugas"}, {"v": "shaking used tablecloths", "t": "Sacudir y retirar manteles usados"}, {"v": "standing in corner while family eat", "t": "Permanecer de pie en un rincón mientras come la familia"}, {"v": "checking chair placement", "t": "Comprobar la colocación de las sillas"}], "living_room": [{"v": "arranging flowers", "t": "Arreglar flores"}, {"v": "dusting furniture", "t": "Quitar polvo de los muebles"}, {"v": "straightening cushions", "t": "Enderezar cojines"}, {"v": "organizing magazines", "t": "Ordenar revistas"}, {"v": "polishing brass handles", "t": "Pulir tiradores de latón"}, {"v": "cleaning glass surfaces", "t": "Limpiar superficies de cristal"}, {"v": "preparing room before guests arrive", "t": "Preparar el salón antes de invitados"}, {"v": "collecting used cups and saucers", "t": "Recoger tazas y platillos usados"}, {"v": "opening curtains", "t": "Abrir cortinas"}, {"v": "closing curtains", "t": "Cerrar cortinas"}, {"v": "vacuuming rugs", "t": "Aspirar alfombras"}, {"v": "vacuuming upholstery", "t": "Aspirar tapicerías de sofás, butacas y cortinas"}, {"v": "polishing wood", "t": "Pulir madera"}, {"v": "polishing marble", "t": "Pulir mármol"}, {"v": "mopping floor", "t": "Fregar el suelo"}, {"v": "removing ashes from fireplace", "t": "Retirar cenizas de la chimenea"}, {"v": "cleaning the hearth", "t": "Limpiar el hogar de la chimenea"}, {"v": "replenishing dry firewood", "t": "Reponer leña seca"}, {"v": "opening windows to refresh air", "t": "Abrir ventanas para renovar el aire sin enfriar la estancia"}, {"v": "turning on lamps at dusk", "t": "Encender luces ambientales y lámparas al anochecer"}, {"v": "turning on fireplace before arrival", "t": "Encender la chimenea antes de que lleguen residentes o visitas"}, {"v": "placing liquor cart or ice bucket", "t": "Colocar carrito de licores o cubitera"}, {"v": "emptying ashtrays", "t": "Vaciar y limpiar ceniceros"}, {"v": "emptying decorative wastebaskets", "t": "Vaciar papeleras decorativas"}, {"v": "taking used cups to kitchen", "t": "Llevar tazas, vasos o platos usados a la cocina"}, {"v": "cleaning light switches", "t": "Limpiar interruptores"}, {"v": "watering indoor plants", "t": "Regar plantas de interior"}, {"v": "changing flower water", "t": "Cambiar el agua de las flores"}, {"v": "refreshing decorative arrangements", "t": "Refrescar arreglos decorativos"}], "kitchen": [{"v": "prepare breakfast", "t": "Preparar el desayuno"}, {"v": "prepare afternoon tea tray", "t": "Preparar la bandeja del té"}, {"v": "unload groceries", "t": "Descargar la compra"}, {"v": "organize kitchen utensils", "t": "Ordenar utensilios de cocina"}, {"v": "clean countertops", "t": "Limpiar encimeras"}, {"v": "polish copper cookware", "t": "Pulir cazos y utensilios de cobre"}, {"v": "wash vegetables", "t": "Lavar verduras"}, {"v": "prepare snacks", "t": "Preparar aperitivos"}, {"v": "check refrigerator inventory", "t": "Revisar inventario de nevera"}, {"v": "clean coffee maker", "t": "Limpiar la cafetera"}, {"v": "prepare serving trays", "t": "Preparar bandejas de servicio"}, {"v": "scrub sink", "t": "Fregar y desinfectar el fregadero"}, {"v": "load dishwasher", "t": "Cargar el lavavajillas"}, {"v": "wash pots by hand", "t": "Lavar ollas a mano"}, {"v": "wash delicate glasses by hand", "t": "Lavar copas delicadas a mano"}, {"v": "sweep kitchen floor", "t": "Barrer el suelo de la cocina"}, {"v": "mop kitchen floor", "t": "Fregar el suelo de la cocina"}, {"v": "empty trash cans", "t": "Vaciar cubos de basura"}, {"v": "disinfect trash containers", "t": "Desinfectar contenedores"}, {"v": "clean microwave splashes", "t": "Limpiar salpicaduras del microondas"}, {"v": "clean ceramic hob", "t": "Limpiar la vitrocerámica"}, {"v": "check refrigerator expiration dates", "t": "Revisar caducidades y limpiar estantes de nevera"}, {"v": "wipe inside oven", "t": "Limpiar el interior del horno"}, {"v": "prepare ingredients", "t": "Lavar, pelar y cortar ingredientes"}, {"v": "replace kitchen towels and aprons", "t": "Cambiar paños y delantales de cocina"}, {"v": "wash kitchen textiles", "t": "Lavar textiles de cocina"}, {"v": "prepare staff meals", "t": "Preparar comida del personal"}], "library": [{"v": "dust shelves", "t": "Quitar polvo de estanterías"}, {"v": "arrange books", "t": "Ordenar libros"}, {"v": "polish wooden furniture", "t": "Pulir muebles de madera"}, {"v": "clean reading table", "t": "Limpiar mesa de lectura"}, {"v": "organize newspapers", "t": "Ordenar periódicos"}, {"v": "refresh flower arrangements", "t": "Refrescar arreglos florales"}, {"v": "prepare reading area", "t": "Preparar zona de lectura"}, {"v": "open blinds", "t": "Abrir persianas"}, {"v": "close blinds", "t": "Cerrar persianas"}, {"v": "clean desk accessories", "t": "Limpiar accesorios de escritorio"}, {"v": "collect used teacups", "t": "Recoger tazas de té usadas"}, {"v": "arrange armchairs", "t": "Ordenar butacas"}, {"v": "static dusting books", "t": "Limpiar lomos y parte superior de libros sin moverlos"}, {"v": "deep cleaning shelves", "t": "Retirar libros por secciones para limpiar el fondo de estanterías"}, {"v": "aligning volumes", "t": "Alinear volúmenes al borde de la estantería"}, {"v": "using bookends", "t": "Colocar sujetalibros"}, {"v": "return consulted books", "t": "Devolver libros consultados a su sitio"}, {"v": "managing direct sunlight", "t": "Bajar persianas para evitar sol directo sobre los libros"}, {"v": "clear desk", "t": "Ordenar papelería y limpiar superficie de trabajo"}, {"v": "arrange reading nook", "t": "Preparar rincón de lectura"}, {"v": "consult a book", "t": "Consultar un libro en la biblioteca"}], "terrace": [{"v": "arrange flowers", "t": "Arreglar flores"}, {"v": "water plants", "t": "Regar plantas"}, {"v": "arrange outdoor cushions", "t": "Colocar cojines exteriores"}, {"v": "prepare terrace before guests", "t": "Preparar terraza antes de invitados"}, {"v": "clear tea service", "t": "Recoger servicio de té"}, {"v": "clean outdoor furniture", "t": "Limpiar mobiliario exterior"}, {"v": "fold umbrellas", "t": "Plegar sombrillas"}, {"v": "open umbrellas", "t": "Abrir sombrillas"}, {"v": "place decorative lanterns", "t": "Colocar faroles decorativos"}, {"v": "sweep terrace floor", "t": "Barrer suelo de terraza"}, {"v": "remove fallen leaves", "t": "Retirar hojas caídas"}, {"v": "serve refreshments outdoors", "t": "Servir refrescos en exterior"}, {"v": "arrange hammocks", "t": "Colocar hamacas"}, {"v": "clean railings", "t": "Limpiar barandillas"}, {"v": "remove cobwebs from walls", "t": "Quitar telarañas y manchas de polvo o humedad"}, {"v": "empty ashtrays", "t": "Vaciar ceniceros"}, {"v": "clean food stains", "t": "Limpiar manchas de comida"}, {"v": "arrange terrace furniture", "t": "Ordenar mobiliario"}, {"v": "check drains and grates", "t": "Revisar desagües y rejillas"}, {"v": "check potted plants", "t": "Revisar macetas"}], "service_corridor": [{"v": "transporting linens", "t": "Transportar ropa blanca"}, {"v": "organizing housekeeping cart", "t": "Organizar carro de limpieza"}, {"v": "replenishing cleaning supplies", "t": "Reponer productos de limpieza"}, {"v": "delivering fresh towels", "t": "Llevar toallas limpias"}, {"v": "collecting used linens", "t": "Recoger ropa usada"}, {"v": "feeding household pets", "t": "Dar de comer a las mascotas"}, {"v": "walking Coco and Lola", "t": "Pasear a Coco y Lola"}, {"v": "carrying laundry baskets", "t": "Transportar cestos de ropa"}, {"v": "checking service inventory", "t": "Revisar inventario de servicio"}, {"v": "preparing rooms for cleaning", "t": "Preparar habitaciones para limpiar"}], "master_suite": [{"v": "change bed linens", "t": "Cambiar sábanas"}, {"v": "make bed", "t": "Hacer la cama con sábanas tensas y almohadas mullidas"}, {"v": "organize closet", "t": "Ordenar armario"}, {"v": "fold clothes", "t": "Doblar ropa"}, {"v": "prepare room for night", "t": "Preparar la habitación para la noche"}, {"v": "pick up dry cleaning", "t": "Recoger ropa de tintorería"}, {"v": "open windows", "t": "Abrir ventanas"}, {"v": "tidy personal belongings", "t": "Ordenar objetos personales"}, {"v": "freshen towels", "t": "Cambiar toallas"}, {"v": "clean bedside tables", "t": "Limpiar mesillas"}, {"v": "prepare breakfast tray", "t": "Preparar bandeja de desayuno"}, {"v": "organize shoes", "t": "Ordenar zapatos"}, {"v": "turn down bed", "t": "Preparar la cama para dormir"}, {"v": "close curtains and soft lighting", "t": "Cerrar cortinas y encender luz suave"}, {"v": "remove dirty laundry", "t": "Retirar ropa sucia"}, {"v": "check room presentation", "t": "Revisar presentación de la habitación"}], "staff_room": [{"v": "change bed linens", "t": "Cambiar sábanas"}, {"v": "organize lockers", "t": "Ordenar taquillas"}, {"v": "fold uniforms", "t": "Doblar uniformes"}, {"v": "prepare uniforms for next shift", "t": "Preparar uniformes para el siguiente turno"}, {"v": "clean common areas", "t": "Limpiar zonas comunes"}, {"v": "organize personal storage", "t": "Ordenar almacenamiento personal"}, {"v": "restock supplies", "t": "Reponer suministros"}, {"v": "prepare staff break room", "t": "Preparar sala de descanso"}, {"v": "check laundry baskets", "t": "Revisar cestos de ropa"}, {"v": "clean polish service shoes", "t": "Limpiar y pulir zapatos de servicio"}, {"v": "button last uniform button", "t": "Abrochar el último botón del uniforme"}, {"v": "adjust apron back tie", "t": "Ajustar delantal con lazo trasero"}, {"v": "put on white slippers", "t": "Ponerse zapatillas blancas"}, {"v": "check appearance in mirror", "t": "Revisar apariencia en el espejo"}, {"v": "take off dirty uniform", "t": "Quitarse el uniforme sucio tras una jornada dura"}, {"v": "iron work uniforms", "t": "Planchar uniformes de trabajo y colgarlos"}, {"v": "tidy shared spaces", "t": "Ordenar espacios compartidos"}], "master_bathroom": [{"v": "change towels", "t": "Cambiar toallas"}, {"v": "restock toiletries", "t": "Reponer amenities"}, {"v": "clean mirrors", "t": "Limpiar espejos"}, {"v": "clean marble surfaces", "t": "Limpiar mármol"}, {"v": "prepare bathroom supplies", "t": "Preparar suministros de baño"}, {"v": "check guest supplies", "t": "Revisar suministros de invitados"}, {"v": "prepare bathroom before guests", "t": "Preparar baño antes de invitados"}, {"v": "organize vanity", "t": "Ordenar tocador"}, {"v": "change bathrobes", "t": "Cambiar albornoces"}, {"v": "deep disinfect toilet", "t": "Desinfectar inodoro a fondo"}, {"v": "clean sink", "t": "Limpiar lavabo"}, {"v": "polish faucets and handles", "t": "Pulir grifos y tiradores"}, {"v": "fold toilet paper triangle", "t": "Reponer papel higiénico con punta doblada"}, {"v": "ensure tissues", "t": "Reponer pañuelos"}, {"v": "clean glass shower screens", "t": "Limpiar mamparas sin marcas"}, {"v": "wash marble walls", "t": "Lavar paredes de mármol"}, {"v": "empty wastebasket", "t": "Vaciar papelera"}, {"v": "remove soap scum bathtub", "t": "Retirar restos de jabón de la bañera"}, {"v": "refresh floral arrangements", "t": "Refrescar arreglos florales"}], "garden": [{"v": "cut hedges", "t": "Recortar setos"}, {"v": "arrange flowers", "t": "Arreglar flores"}, {"v": "collect fallen leaves", "t": "Recoger hojas caídas"}, {"v": "prepare garden before guests", "t": "Preparar jardín antes de invitados"}, {"v": "sweep paths", "t": "Barrer caminos"}, {"v": "check irrigation system", "t": "Revisar riego"}, {"v": "clean garden furniture", "t": "Limpiar muebles de jardín"}, {"v": "clean exterior glass", "t": "Limpiar cristales exteriores"}, {"v": "set outdoor tables gazebo", "t": "Montar mesas exteriores en cenador"}, {"v": "remove empty glasses outdoors", "t": "Retirar vasos, platos y tazas vacíos"}, {"v": "fill bird feeder", "t": "Rellenar comedero de pájaros"}, {"v": "cut flowers for bouquet", "t": "Cortar flores para ramo"}, {"v": "collect forgotten belongings", "t": "Recoger objetos olvidados en jardín"}, {"v": "empty outside ashtrays", "t": "Vaciar ceniceros exteriores"}, {"v": "turn off decorative lights", "t": "Apagar luces decorativas"}, {"v": "fix outdoor decorations", "t": "Arreglar decoración exterior"}], "laundry": [{"v": "iron bed linens", "t": "Planchar ropa de cama"}, {"v": "fold sheets", "t": "Doblar sábanas"}, {"v": "sort laundry", "t": "Clasificar ropa"}, {"v": "load washing machines", "t": "Cargar lavadoras"}, {"v": "unload dryers", "t": "Descargar secadoras"}, {"v": "organize clean uniforms", "t": "Ordenar uniformes limpios"}, {"v": "prepare clean towels", "t": "Preparar toallas limpias"}, {"v": "check laundry inventory", "t": "Revisar inventario de lavandería"}, {"v": "remove stains bed linens", "t": "Quitar manchas de ropa de cama"}, {"v": "separate by labels", "t": "Separar por color, tejido, temperatura y suciedad"}, {"v": "check pockets", "t": "Vaciar bolsillos antes de lavar"}, {"v": "apply stain products", "t": "Aplicar productos en cuellos, puños y manchas"}, {"v": "put delicates in mesh bags", "t": "Meter lencería y prendas delicadas en bolsas de malla"}, {"v": "measure detergent", "t": "Medir detergente y suavizante"}, {"v": "empty lint filter", "t": "Vaciar filtro de pelusas"}, {"v": "remove laundry end cycle", "t": "Retirar ropa al acabar ciclo"}, {"v": "steam ironing", "t": "Planchar con estación de vapor"}, {"v": "fold house method", "t": "Doblar con el método de la casa"}, {"v": "hang shirts dresses", "t": "Colgar camisas o vestidos en perchas correctas"}, {"v": "hand wash delicates", "t": "Lavar prendas delicadas a mano"}, {"v": "pile folded clothes", "t": "Apilar ropa doblada"}], "pantry": [{"v": "check pantry inventory", "t": "Revisar inventario de despensa"}, {"v": "organize shelves", "t": "Ordenar estantes"}, {"v": "rotate food inventory", "t": "Rotar alimentos"}, {"v": "receive deliveries", "t": "Recibir entregas"}, {"v": "organize canned goods", "t": "Ordenar conservas"}, {"v": "count supplies", "t": "Contar suministros"}, {"v": "restock kitchen inventory", "t": "Reponer inventario de cocina"}, {"v": "label containers", "t": "Etiquetar recipientes"}, {"v": "check expiration dates", "t": "Revisar caducidades"}, {"v": "prepare shopping list", "t": "Preparar lista de la compra"}, {"v": "clean shelves remove jars", "t": "Limpiar estantes retirando tarros"}, {"v": "hand clean china glassware", "t": "Limpiar porcelana y cristalería fina a mano"}, {"v": "sort placemats napkins", "t": "Ordenar manteles individuales y servilletas por juegos"}, {"v": "check stemware", "t": "Comprobar copas sin marcas de agua"}, {"v": "clean pantry trash can", "t": "Limpiar papelera auxiliar"}, {"v": "sweep mop pantry floor", "t": "Barrer y fregar suelo de despensa"}, {"v": "polishing silverware", "t": "Pulir cubertería"}, {"v": "counting silverware", "t": "Contar cubertería"}, {"v": "organizing cutlery drawers", "t": "Ordenar cajones de cubertería"}, {"v": "preparing formal service sets", "t": "Preparar juegos de servicio formal"}, {"v": "inspecting serving pieces", "t": "Revisar piezas de servir"}, {"v": "arranging trays", "t": "Ordenar bandejas"}, {"v": "storing cleaned silverware", "t": "Guardar plata limpia"}, {"v": "preparing banquet service", "t": "Preparar servicio de banquete"}, {"v": "cleaning display cabinets", "t": "Limpiar vitrinas"}], "staircase": [{"v": "dusting banisters", "t": "Quitar polvo de balaustres"}, {"v": "polishing handrails", "t": "Pulir pasamanos"}, {"v": "vacuuming carpet runner", "t": "Aspirar alfombra de escalera"}, {"v": "arranging floral displays", "t": "Arreglar flores"}, {"v": "checking lighting fixtures", "t": "Revisar iluminación"}, {"v": "sweeping steps", "t": "Barrer escalones"}, {"v": "preparing entrance route", "t": "Preparar recorrido de entrada antes de invitados"}, {"v": "cleaning decorative elements", "t": "Limpiar elementos decorativos"}, {"v": "opening curtains", "t": "Abrir cortinas"}, {"v": "closing curtains", "t": "Cerrar cortinas"}], "dressing_room": [{"v": "organize closet", "t": "Ordenar armario"}, {"v": "organize shoes", "t": "Ordenar zapatos"}, {"v": "prepare clothes", "t": "Preparar ropa"}, {"v": "fold garments", "t": "Doblar prendas"}, {"v": "check accessories", "t": "Revisar accesorios"}, {"v": "pick up dry cleaning", "t": "Recoger ropa para tintorería"}, {"v": "organize jewelry trays", "t": "Ordenar bandejas de joyería"}, {"v": "prepare evening outfit", "t": "Preparar conjunto de noche"}, {"v": "organize drawers", "t": "Ordenar cajones"}, {"v": "put clean clothes away", "t": "Guardar ropa limpia"}, {"v": "clean full length mirrors", "t": "Limpiar espejos de cuerpo entero"}, {"v": "keep scented sachets", "t": "Colocar saquitos aromáticos"}, {"v": "sort clothes by type", "t": "Ordenar ropa por prenda, tejido y color"}, {"v": "hang identical hangers", "t": "Colgar en perchas iguales"}, {"v": "fold sweaters same size", "t": "Doblar jerséis al mismo tamaño"}, {"v": "clean shoe soles", "t": "Limpiar suelas y cepillar zapatos"}, {"v": "put shoe trees", "t": "Poner hormas"}, {"v": "store handbags dust bags", "t": "Guardar bolsos con papel y fundas"}, {"v": "tidy watches organizers", "t": "Ordenar relojes y organizadores"}, {"v": "clean jewelry boxes", "t": "Cerrar joyeros y limpiar piezas"}, {"v": "prepare next day outfit", "t": "Preparar ropa del día siguiente"}], "breakfast_room": [{"v": "setting breakfast table", "t": "Poner mesa de desayuno"}, {"v": "preparing coffee service", "t": "Preparar servicio de café"}, {"v": "preparing tea service", "t": "Preparar servicio de té"}, {"v": "arranging newspapers", "t": "Colocar periódicos"}, {"v": "serving breakfast", "t": "Servir desayuno"}, {"v": "clearing breakfast dishes", "t": "Recoger vajilla de desayuno"}, {"v": "replenishing pastries", "t": "Reponer bollería"}, {"v": "preparing juice service", "t": "Preparar servicio de zumo"}, {"v": "arranging flowers", "t": "Arreglar flores"}, {"v": "cleaning table after breakfast", "t": "Limpiar mesa tras desayuno"}], "rear_service_entrance": [{"v": "receive deliveries", "t": "Recibir entregas"}, {"v": "unload groceries", "t": "Descargar compra"}, {"v": "pick up packages", "t": "Recoger paquetes"}, {"v": "organize incoming supplies", "t": "Ordenar suministros entrantes"}, {"v": "review delivery invoices", "t": "Revisar albaranes"}, {"v": "greet service providers", "t": "Recibir proveedores"}, {"v": "move supplies inside", "t": "Mover suministros al interior"}, {"v": "collect laundry deliveries", "t": "Recoger tintorería"}, {"v": "prepare outgoing packages", "t": "Preparar paquetes de salida"}, {"v": "check boxes damage", "t": "Comprobar cajas dañadas"}, {"v": "sweep mop floor", "t": "Barrer y fregar suelo"}, {"v": "clean doormat", "t": "Sacudir o aspirar felpudo"}, {"v": "clean doorknobs intercom", "t": "Limpiar pomos, timbres e interfonos"}, {"v": "dry umbrellas", "t": "Secar paraguas antes de guardarlos"}, {"v": "tidy key board", "t": "Ordenar tablero de llaves"}, {"v": "check delivery board", "t": "Revisar tablero de entregas"}, {"v": "monitor merchandise arrival", "t": "Controlar llegada de mercancía"}], "street_exterior": [{"v": "supermarket groceries", "t": "Comprar en supermercado"}, {"v": "select fresh produce", "t": "Seleccionar fruta y verdura"}, {"v": "check shopping list", "t": "Revisar lista de la compra"}, {"v": "compare product quality", "t": "Comparar calidad de productos"}, {"v": "buy household supplies", "t": "Comprar suministros domésticos"}, {"v": "choose flowers", "t": "Elegir flores"}, {"v": "buy pet food", "t": "Comprar comida para mascotas"}, {"v": "transport groceries", "t": "Transportar la compra"}, {"v": "check special orders", "t": "Revisar encargos especiales"}, {"v": "wait at checkout", "t": "Esperar en caja"}, {"v": "use thermal bags", "t": "Usar bolsas térmicas"}, {"v": "bakery pickup", "t": "Recoger pan o pasteles en panadería"}, {"v": "go pharmacy", "t": "Ir a la farmacia"}, {"v": "go florist", "t": "Comprar flores"}, {"v": "go delicatessen", "t": "Comprar en charcutería gourmet"}, {"v": "return online packages", "t": "Devolver paquetes online"}, {"v": "walk dogs schedule", "t": "Pasear perros en horario establecido"}, {"v": "pick dog excrement", "t": "Recoger excrementos de los perros"}, {"v": "clean dog urine", "t": "Limpiar orina con agua"}, {"v": "take dogs vet", "t": "Llevar perros al veterinario"}, {"v": "take dogs groomer", "t": "Llevar perros a peluquería canina"}, {"v": "sit with pets bench", "t": "Sentarse con mascotas en un banco"}, {"v": "dry cleaner delivery", "t": "Llevar ropa a tintorería"}, {"v": "post office", "t": "Ir a correos"}, {"v": "carry pet supplies", "t": "Transportar suministros de mascotas"}], "lady_study": [{"v": "detailed cleaning", "t": "Limpieza detallada"}, {"v": "surface cleaning", "t": "Limpieza de superficies"}, {"v": "dust desk shelves frames", "t": "Quitar polvo de escritorio, estantes y marcos"}, {"v": "clean computer screen keyboard", "t": "Limpiar pantalla y teclado"}, {"v": "vacuum delicate carpets", "t": "Aspirar alfombras delicadas"}, {"v": "polish hardwood floors", "t": "Pulir suelo de madera"}, {"v": "mail delivery desk", "t": "Colocar cartas y periódicos en el escritorio"}, {"v": "replenish office supplies", "t": "Reponer papelería de lujo"}, {"v": "empty office wastebasket", "t": "Vaciar papelera del despacho"}, {"v": "adjust climate lighting", "t": "Ajustar climatización e iluminación"}, {"v": "light scented candles", "t": "Encender velas aromáticas"}, {"v": "bring collect coffee tray", "t": "Traer o recoger bandeja de café o té"}, {"v": "care desk plants", "t": "Regar y limpiar plantas del escritorio"}], "staff_dining_room": [{"v": "preparing housekeeping schedule", "t": "Preparar horario de limpieza"}, {"v": "organizing daily assignments", "t": "Organizar tareas diarias"}, {"v": "checking cleaning supplies", "t": "Revisar productos de limpieza"}, {"v": "folding uniforms", "t": "Doblar uniformes"}, {"v": "preparing service trays", "t": "Preparar bandejas de servicio"}, {"v": "reviewing task lists", "t": "Revisar listas de tareas"}, {"v": "arranging room keys", "t": "Ordenar llaves"}, {"v": "documenting completed work", "t": "Anotar trabajo completado"}, {"v": "organizing maintenance requests", "t": "Organizar avisos de mantenimiento"}, {"v": "place clean tablecloth", "t": "Poner mantel limpio"}, {"v": "set staff table", "t": "Poner mesa del personal"}, {"v": "bring water and bread", "t": "Traer agua y pan"}, {"v": "serve staff meal", "t": "Servir comida al personal"}, {"v": "clear staff table", "t": "Recoger mesa del personal"}, {"v": "clean staff table", "t": "Limpiar y desinfectar mesa"}], "staff_bathroom": [{"v": "replenish supplies", "t": "Reponer suministros"}, {"v": "change towels", "t": "Cambiar toallas"}, {"v": "clean mirrors", "t": "Limpiar espejos"}, {"v": "organize lockers", "t": "Ordenar taquillas"}, {"v": "check inventory", "t": "Revisar inventario"}, {"v": "prepare bathroom", "t": "Preparar baño"}, {"v": "clean sinks", "t": "Limpiar lavabos"}, {"v": "replenish toilet paper", "t": "Reponer papel higiénico"}, {"v": "clean toilet", "t": "Limpiar inodoro"}, {"v": "clean shower screen", "t": "Limpiar mampara"}, {"v": "prepare shift change", "t": "Preparar baño para cambio de turno"}], "main_door": [{"v": "collect newspaper mailbox", "t": "Recoger periódico del buzón"}, {"v": "greet visitors", "t": "Recibir visitas"}, {"v": "receive deliveries", "t": "Recibir entregas"}, {"v": "check entrance appearance", "t": "Comprobar aspecto de la entrada"}, {"v": "open door service providers", "t": "Abrir puerta a proveedores"}, {"v": "collect packages", "t": "Recoger paquetes"}, {"v": "sweep driveway", "t": "Barrer entrada"}, {"v": "arrange entry flowers", "t": "Arreglar flores de entrada"}, {"v": "open door for lady", "t": "Abrir puerta a la señora"}, {"v": "see lady off", "t": "Despedir a la señora"}, {"v": "wait with door open", "t": "Esperar a la señora con la puerta abierta"}, {"v": "help lady suitcases", "t": "Ayudar a la señora con maletas"}, {"v": "monitor arrivals", "t": "Controlar llegadas"}, {"v": "taking guests coats", "t": "Recoger abrigos de los invitados al llegar"}, {"v": "placing coats cloakroom", "t": "Guardar abrigos en el guardarropa"}, {"v": "receiving umbrellas", "t": "Recibir paraguas de los invitados"}], "broom_closet": [{"v": "organize cleaning products", "t": "Ordenar productos de limpieza"}, {"v": "change mop heads", "t": "Cambiar cabezales de mopa"}, {"v": "prepare cleaning cart", "t": "Preparar carro de limpieza"}, {"v": "check chemical inventory", "t": "Revisar inventario químico"}, {"v": "store cleaning equipment", "t": "Guardar equipo de limpieza"}, {"v": "refill spray bottles", "t": "Rellenar pulverizadores"}, {"v": "organize shelves", "t": "Ordenar estantes"}, {"v": "collect new supplies", "t": "Recoger suministros nuevos"}, {"v": "label products", "t": "Colocar productos por categoría con etiquetas visibles"}, {"v": "sort bottles sponges cloths", "t": "Ordenar botellas, esponjas, paños y cepillos"}, {"v": "clean store vacuums", "t": "Limpiar y guardar aspiradores, escobas y cubos"}, {"v": "prepare room cleaning kit", "t": "Preparar kit de limpieza por habitación"}], "service_yard": [{"v": "sorting recycling", "t": "Separar plástico, vidrio, papel y residuos"}, {"v": "compost management", "t": "Gestionar compost"}, {"v": "move heavy containers", "t": "Mover contenedores pesados al punto de recogida"}, {"v": "disinfect containers", "t": "Desinfectar contenedores con presión"}, {"v": "hang delicate garments outside", "t": "Tender prendas delicadas al aire"}, {"v": "air duvets pillows rugs", "t": "Airear edredones, almohadas y alfombras"}, {"v": "collect dry laundry", "t": "Recoger ropa seca del patio"}, {"v": "fold garments baskets", "t": "Colocar prendas en cestos"}, {"v": "collect firewood pellets", "t": "Recoger leña o pellets"}, {"v": "greet couriers service entrance", "t": "Recibir repartidores en entrada de servicio"}, {"v": "sweep wash yard", "t": "Barrer y lavar patio de servicio"}, {"v": "open service yard gates", "t": "Abrir portones a contratistas"}, {"v": "dispose household waste", "t": "Eliminar residuos domésticos"}, {"v": "separate recyclable materials", "t": "Separar reciclaje"}, {"v": "transport garbage containers", "t": "Transportar contenedores"}, {"v": "collect recycling containers", "t": "Recoger contenedores de reciclaje"}, {"v": "organize waste area", "t": "Ordenar zona de residuos"}, {"v": "dispose garden waste", "t": "Tirar residuos de jardín"}, {"v": "change garbage bags", "t": "Cambiar bolsas de basura"}]};
+function E(id){return document.getElementById(id);} function V(id){const e=E(id);return e?e.value:"";} function T(id){const e=E(id);return e&&e.options&&e.selectedIndex>=0?e.options[e.selectedIndex].text:(e?e.value:"");} function OPT_PROMPT(id){const e=E(id);return e&&e.options&&e.selectedIndex>=0?(e.options[e.selectedIndex].dataset.prompt||e.options[e.selectedIndex].text):"";} function setStatus(msg){const s=E('status');if(s)s.innerHTML=msg;}
+function fillActivities(){
+  try{
+    const a=E('activity');
+    const loc=V('location');
+    const arr=ACTIVITIES_BY_LOCATION[loc]||[];
+    if(!a)return;
+    const old=a.value;
+    a.innerHTML='';
+    arr.forEach(function(x){
+      const o=document.createElement('option');
+      o.value=x.v;
+      o.textContent=x.t;
+      a.appendChild(o);
+    });
+    if(arr.length===0){
+      const o=document.createElement('option');
+      o.value='no activity available';
+      o.textContent='Sin actividades disponibles';
+      a.appendChild(o);
+      setStatus('⚠ No hay actividades para esta localización.');
+      return;
+    }
+    if([...a.options].some(o=>o.value===old)){
+      a.value=old;
+    }else{
+      a.selectedIndex=0;
+    }
+  }catch(err){
+    setStatus('⚠ Error rellenando actividades: '+err.message);
+  }
+}
+function compat(){const w=[];
+const workFabrics=['micro stripes','oxford stripe','candy stripe','milleraies','gingham','mini gingham','tattersall check','windowpane','twill','chambray','seersucker','polka dot'];
+const serviceFabrics=['fine poplin','barathea','ottoman','faille','crepe','tropical wool','prince of wales','small houndstooth','matte satin','satin','satin faille','jacquard'];
+if(V('uniformType')==='service'){
+  if(serviceFabrics.indexOf(V('fabric'))<0){E('fabric').value='barathea';w.push('Tejido corregido para servicio: Barathea');}
+  if(['service lace','service bib lace'].indexOf(V('apronType'))<0){E('apronType').value='service lace';w.push('Delantal corregido para servicio');}
+}
+if(V('uniformType')==='work'){
+  if(workFabrics.indexOf(V('fabric'))<0){E('fabric').value='micro stripes';w.push('Tejido corregido para trabajo');}
+  if(['service lace','service bib lace'].indexOf(V('apronType'))>=0){E('apronType').value='work half';w.push('Delantal corregido para trabajo');}
+}
+if(V('characterCount')==='two'&&['ppp','pp','pmc','pm'].indexOf(V('shot'))>=0){E('shot').value='pa';w.push('Dos personajes fuerza plano americano');}
+setStatus(w.length?'⚠ '+w.join('<br>⚠ '):'✓ V6.8.16 estable.');}
+function randSelect(id,allowed){const e=E(id);if(!e)return;const ops=[...e.options].filter(o=>!allowed||allowed.indexOf(o.value)>=0);if(ops.length)e.value=ops[Math.floor(Math.random()*ops.length)].value;}
+function randomize(mode){
+  // V6.8.11 random modes:
+  // scene = location/activity/camera/context only
+  // look = uniform/color/fabric/hair/body only
+  // creative/full = both, with compatibility
+  const sceneIds=['location','gaze','narrativeMoment','formalityLevel','houseActivity','secondaryRole','lighting','emotionalState','houseState','shot','format','lens','angle','visualStyle','publicationTarget','composition','narrativeComposition','cameraType','visualTreatment','photoReference','bodyPosture'];
+  const lookIds=['uniformType','color','fabric','hairstyle','stockings','uniformState','apronType','bodyAge','bodyHeight','bodyWeight','uniformSize','bodyBuild','bodyShape','bustMeasure','waistMeasure','hipMeasure','uniformFit'];
+  if(mode==='look'){
+    lookIds.forEach(id=>randSelect(id));
+    compat();
+  }else if(mode==='scene' || mode==='conservative'){
+    if(mode==='conservative'){
+      randSelect('location'); fillActivities(); randSelect('activity');
+      randSelect('gaze',['task','down','off_frame','lady','object']);
+      randSelect('lighting',['natural_manana','interior_suave','nublada_suave']);
+      randSelect('emotionalState',['neutral','concentrada','atenta','discreta','reservada']);
+      randSelect('houseState',['ordenada','ligeramente_vivida','actividad_normal']);
+      randSelect('shot',['pm','pa','tq','full']);
+      randSelect('lens',['35mm','50mm','85mm']);
+      randSelect('angle',['eye','slightly_high','slightly_low']);
+      randSelect('visualStyle',['documentary photography','domestic reportage photography','uniform catalog photography']);
+      randSelect('bodyPosture',['auto','standing','maid_position','walking','leaning_forward']);
+    }else{
+      sceneIds.forEach(id=>randSelect(id));
+      fillActivities(); randSelect('activity');
+    }
+  }else{
+    lookIds.forEach(id=>randSelect(id));
+    compat();
+    sceneIds.forEach(id=>randSelect(id));
+    fillActivities(); randSelect('activity');
+  }
+  compat();
+  generatePrompt();
+  return false;
+}
+function characterBlock(){if(V('characterCount')==='two')return `CHARACTER COUNT ABSOLUTE LOCK:
+The image must contain exactly TWO clearly visible adult characters.
+PRIMARY CHARACTER: the maid from the uploaded reference image.
+SECONDARY CHARACTER: ${T('secondaryRole')}.
+Both characters must be physically present in the same scene and inside the frame. If only one person appears, the image is incorrect.
+`; return `CHARACTER COUNT:
+One character only. Do not add a second person.
+`;}
+
+function bodyProfileBlock(){
+  const vals=['bodyAge','bodyHeight','bodyWeight','uniformSize','bodyBuild','bodyShape','bustMeasure','waistMeasure','hipMeasure','uniformFit'];
+  const has = vals.some(id=>V(id) && V(id)!=='auto' && V(id)!=='normal');
+  if(!has) return '';
+  let bmi='auto';
+  const h=parseFloat(V('bodyHeight')), w=parseFloat(V('bodyWeight'));
+  if(!isNaN(h)&&!isNaN(w)&&h>0){ bmi=(w/Math.pow(h/100,2)).toFixed(1); }
+  return `BODY PROFILE LOCK:
+Age: ${T('bodyAge')}.
+Height: ${T('bodyHeight')}.
+Weight: ${T('bodyWeight')}.
+BMI: ${bmi}.
+Uniform size: ${T('uniformSize')}.
+Body build: ${T('bodyBuild')}.
+Body shape: ${T('bodyShape')}.
+Measurements: bust ${T('bustMeasure')}, waist ${T('waistMeasure')}, hips ${T('hipMeasure')}.
+Uniform fit: ${T('uniformFit')}.
+
+BODY PROFILE ABSOLUTE LOCK:
+Respect the selected body profile.
+Never idealize the body.
+Never reduce waist size.
+Never enlarge breasts.
+Never enlarge hips.
+Never create fashion-model proportions.
+Respect realistic adult proportions according to age, height, weight, BMI, body build, body shape, measurements and uniform size.
+The uniform must naturally adapt to this body.
+Respect realistic fabric tension according to the selected uniform size and fit.
+No glamour body. No exaggerated curves. No elongated legs. Natural posture and natural weight distribution.
+
+`;
+}
+
+function globalContextBlock(){return `PRIVATE RESIDENCE LOCK:
+All scenes occur inside a private luxury residence. Never hotel, never hospital, never office, never factory, never commercial building, never employee cafeteria, never institutional facility. Everything belongs to a private household.
+
+NARRATIVE CONTEXT:
+Momento narrativo: ${T('narrativeMoment')}.
+Nivel de formalidad: ${T('formalityLevel')}.
+Actividad de la casa: ${T('houseActivity')}.
+Segundo personaje: ${T('secondaryRole')}.
+Iluminación: ${T('lighting')}.
+Estado emocional: ${T('emotionalState')}.
+Estado de la casa: ${T('houseState')}.
+
+COMPOSITION AND PUBLICATION:
+Destino de publicación: ${T('publicationTarget')}.
+Composición: ${T('composition')}.
+Composición narrativa: ${T('narrativeComposition')}.
+Tipo de cámara: ${T('cameraType')}.
+Tratamiento visual: ${T('visualTreatment')}.
+Referencia fotográfica: ${T('photoReference')}.
+
+PHOTOGRAPHIC REFERENCE PRIORITY LOCK:
+The photographic reference is a secondary aesthetic modifier only. Explicit controls for lighting, emotional state, narrative moment, composition, narrative composition, camera, shot, lens, activity and uniform always take priority. Apply only compatible traits from the selected photographic reference. Never let it change day into night, alter the selected emotion, invent a POV, or override explicit scene instructions.
+
+`;}
+function uniformBlock(){let b=`V6.8.16 STABLE UNIFORM LOCKS:
+Uniform type selected: ${T('uniformType')}.
+Apron selected: ${T('apronType')}.
+Dress colour selected: ${T('color')}.
+Fabric selected: ${T('fabric')}.
+Hairstyle selected: ${T('hairstyle')}.
+Headwear selected: ${T('headwear')}.
+Stockings selected: ${T('stockings')}.
+Uniform state selected: ${T('uniformState')}.
+
+PRIORITY SYSTEM:
+PRIORITY 1: apron construction.
+PRIORITY 2: dress construction.
+PRIORITY 3: collar structure and button count.
+PRIORITY 4: facial identity.
+PRIORITY 5: activity and environment.
+If visual style conflicts with uniform construction, uniform construction always wins.
+
+HAIRSTYLE OVERRIDE LOCK:
+Selected hairstyle overrides hairstyle from reference image.
+Preserve facial identity, but do not preserve original hairstyle unless "Conservar peinado de referencia" is selected.
+For low bun or centered bun: hair fully gathered, hair off shoulders, neat low bun, no loose hairstyle, no shoulder-length appearance.
+
+BUTTON MATERIAL ABSOLUTE LOCK:
+Buttons must be small, flat, conventional sewn garment buttons with a matte or low-sheen finish.
+They must read clearly as ordinary flat buttons, never pearls, beads, domes, gems or jewelry.
+No spherical profile, no pearl-like reflection, no decorative jewel effect, no oversized buttons.
+Buttons must never become a dominant visual feature.
+
+APRON FRONT — ABSOLUTE ZERO-BUTTON LOCK:
+The apron bib, apron lower panel, waistband, shoulder straps and every other apron surface contain ZERO BUTTONS. Buttons belong exclusively to the underlying DRESS placket. Opaque apron fabric physically occludes any dress button behind it. Never relocate, duplicate, reproduce, print or visually transfer a dress button onto the apron. PHYSICAL OCCLUSION > visible button count. If a button location falls on apron fabric, that button MUST NOT EXIST on the visible surface.
+
+BUTTON OCCLUSION CHECK — MANDATORY:
+For every visible button, determine which physical garment layer contains it. Dress behind apron = hidden. Dress exposed outside apron = potentially visible according to dress rules. Never render floating buttons on an apron.
+
+DRESS LENGTH ABSOLUTE LOCK:
+Dress hem ends exactly at mid-knee. Never above knee. Never calf-length. Never midi. Never long skirt.
+
+APRON LENGTH ABSOLUTE LOCK:
+Apron ends 5–10 cm above dress hem. Never mid-thigh.
+
+`;
+if(V('uniformType')==='service'){
+b+=`SERVICE UNIFORM ABSOLUTE LOCK:
+Formal European private-residence service uniform, not a work uniform, not a hotel uniform, not a French maid costume.
+
+SERVICE FABRIC LOCK:
+Use exactly the selected service fabric. Barathea, Ottoman, Faille, Crepé, Tropical wool, fine poplin, Prince of Wales and small houndstooth retain their characteristic weave/pattern. Matte satin has restrained low sheen; satin has a clearer smooth sheen; satin faille combines ribbed structure with controlled sheen; jacquard shows a subtle woven motif. Even the satin options must look like quality garment fabric, never plastic, metallic or costume-like.
+
+SERVICE FOOTWEAR LOCK:
+Service uniform always uses black domestic-service shoes: closed toe, closed heel, plain design, low wedge or low block heel 3–4 cm. Never white shoes with service uniform.
+
+SERVICE COLLAR ABSOLUTE LOCK:
+Mandatory pure white Peter Pan collar.
+The collar is fully white plain fabric, rounded Peter Pan shape, symmetrical and closed around the neck. The outer edge of the white Peter Pan collar has a narrow, delicate white lace trim matching the lace used on the cuffs and service apron. The lace is restrained and traditional, not a wide ruffle, not piping and not a second collar.
+The top closure must be closed.
+No visible open V at the throat. No open neckline. No shirt collar. No lapel collar. No coloured collar. No work-uniform collar.
+
+SERVICE BUTTON COUNT ABSOLUTE LOCK:
+The garment contains EXACTLY FOUR AND ONLY FOUR front bodice buttons in total. There is no fifth button anywhere on the dress. The four buttons form one short vertical row between collar and natural waist. When the bodice is unobstructed, ALL FOUR buttons must be visible and countable: 1, 2, 3, 4 — STOP. Never generate a fifth button below or above them. No skirt buttons and no decorative extra buttons. Buttons are small, flat, matte sew-through dress buttons; never pearl-like, domed, jewel-like or glossy.
+
+SERVICE BUTTON CLOSURE LOCK:
+All visible buttons must appear fastened.
+No unbuttoned top button. No open placket. No visible gap between collar and first button.
+
+SERVICE SLEEVE ABSOLUTE LOCK:
+Three-quarter sleeves mandatory.
+Sleeves extend below the elbow and end between elbow and wrist.
+Wide pure white cuffs with delicate white lace trim.
+No short sleeves. No cap sleeves. No sleeveless version. No rolled sleeves.
+
+SERVICE BODICE AND PLACKET LOCK:
+Front button placket exists only on the bodice and ends exactly at the natural waist.
+The placket never continues below the waist.
+The skirt front is a clean uninterrupted panel with no buttons and no visible placket behind the apron.
+
+SERVICE SKIRT LOCK:
+Straight formal skirt, mid-knee length. No A-line flare. No full-length shirt-dress construction. No buttons on skirt.
+
+SERVICE APRON ABSOLUTE LOCK:
+${V('apronType')==='service bib lace'?'Pure white formal SERVICE BIB APRON with delicate lace trim. The bib is rectangular or only very slightly trapezoidal, with almost vertical sides and a horizontal top edge. It is a separate opaque layer worn over the dress, with a formal waist panel and exactly two restrained shoulder straps supporting the bib. Shoulder straps are correct and mandatory for this bib-apron option. Never hourglass, anatomical, curved-body bib or modern kitchen-apron silhouette.':'Pure white formal SERVICE WAIST / HALF APRON with delicate lace trim. Mandatory separate apron garment beginning exactly at the natural waist, with visible waistband and lower front panel ONLY. ABSOLUTELY NO BIB and ABSOLUTELY NO SHOULDER STRAPS. No vertical lace bands, suspenders, braces, ribbons or fabric strips may rise from the waistband onto the bodice, chest or shoulders. No cross-back construction. The entire dress bodice above the waistband remains unobstructed except for the four dress buttons.'}
+No pockets unless explicitly specified elsewhere.
+
+SERVICE CHEST POCKET LOCK:
+No chest pocket. No breast pocket. No pen pocket. No patch pocket on bodice. Service uniforms never contain a chest pocket.
+`;
+}else{
+b+=`WORK UNIFORM CANONICAL MODEL:
+European private-residence work uniform, practical and professional, not a hotel uniform, not a nurse uniform, not a French maid costume.
+
+WORK BODICE ABSOLUTE LOCK:
+Upper bodice contains exactly THREE front buttons.
+Buttons are located only on upper bodice.
+Buttons stop above natural waist.
+No buttons below waist. No shirt-front construction. No continuous placket into skirt.
+Buttons may be partially hidden by a bib apron, hands or objects, but the garment construction remains exactly three buttons.
+
+WORK COLLAR AND OPENING ABSOLUTE LOCK:
+Small rounded shirt-style collar.
+Soft shallow V-neck opening formed naturally by the collar itself.
+No tailored lapels. No jacket lapels. No hotel-uniform lapels. No nurse-uniform lapels. No corporate lapels.
+Collar and opening are made from exactly the same fabric and colour as the dress.
+Thin white piping may appear only around the outer perimeter of the collar.
+No piping along the V opening. No hotel-style lapel piping.
+No white collar. No contrast collar. No pointed collar. No Peter Pan collar. No service collar.
+
+WORK SLEEVE ABSOLUTE LOCK:
+Short sleeves made from the same fabric and colour as the dress.
+Sleeve ends are finished with a narrow cuff made from same fabric as dress.
+Thin white piping at cuff edge only.
+No large white cuffs. No lace cuffs. No service cuffs. No segmented sleeve construction. No rolled sleeves.
+
+WORK CHEST POCKET ABSOLUTE LOCK:
+No chest pocket. No breast pocket. No upper torso pocket. No pen pocket. No patch pocket on chest.
+The dress front above the apron must remain completely clean.
+
+WORK FOOTWEAR CANVAS ABSOLUTE LOCK:
+White canvas domestic-service slip-on shoes only.
+Soft textile upper, rounded toe, simple lightweight construction, matte woven canvas texture, fabric seams, subtle fabric creasing and fabric edge binding.
+Closed toe, closed heel, integrated low wedge sole approx 3–4 cm. Slightly used but clean, off-white from normal use.
+No loafers. No moccasins. No penny loafers. No driving shoes. No leather slip-ons. No dress shoes. No visible decorative stitching. No saddle construction.
+Never leather, never synthetic leather, never glossy, never plastic, never rubber-looking, never nursing shoes.
+
+WORK SKIRT LOCK:
+Straight mid-knee skirt, never A-line, never flared.
+
+`;
+if(V('apronType')==='work bib'){
+b+=`WORK BIB APRON ABSOLUTE LOCK:
+Apron construction is PRIORITY 1.
+Work bib apron mandatory.
+The bib must have a structured rectangular shape.
+The bib must be noticeably narrower than the apron skirt.
+The bib side edges must remain vertical.
+The bib may become slightly narrower near the waist only very subtly.
+No strong tapering. No trapezoid bib. No triangular bib. No hourglass bib. No inward slanted sides. No kitchen-apron silhouette. No chef-apron silhouette.
+The transition between bib and waist must remain straight and architectural.
+The shoulder straps must descend vertically from the upper corners of the bib and remain parallel on the front.
+Straps pass UNDER the dress collar, continue over the shoulders and cross in an X shape at the back.
+No shoulder buttons. No Heritage apron. No neck loop. No halter apron.
+Exactly two large rectangular lower patch pockets.
+A horizontal decorative band crosses the bib. A horizontal decorative band crosses the top of each pocket.
+All decorative bands must be exactly the same fabric and colour as the dress.
+Apron ends approximately 5–10 cm above dress hem.
+`;
+}else if(V('apronType')==='work half'){
+b+=`WORK HALF APRON ABSOLUTE LOCK:
+Pure white half apron. No bib. No pockets. No lace. No frills. Separate waistband.
+One continuous inset decorative band running parallel to the left edge, right edge and lower edge of the apron panel, inset approximately 4–5 cm from the edge.
+The inset band colour and fabric must be exactly the same as the dress.
+`;
+}else{
+b+=`NO APRON SELECTED:
+Dress remains fully visible. No apron must appear.
+`;
+}}
+return b;}
+
+function locationLockBlock(){
+const a=V('activity');
+const loc=V('location');
+const locks={
+"supermarket groceries":"Inside a supermarket. Visible supermarket aisles, shelves, shopping carts or baskets. Never outside the building.",
+"select fresh produce":"Inside the supermarket produce section or indoor greengrocer. Visible fruit and vegetable displays. Never on the sidewalk.",
+"check shopping list":"Inside a supermarket aisle. Shopping list visible, shelves and products around her. Never outside.",
+"compare product quality":"Inside supermarket or indoor store aisle. Products and shelves visible. Never outside.",
+"buy household supplies":"Inside a supermarket or household supply store. Shelves with household products visible. Never outside.",
+"choose flowers":"Inside a florist shop. Flower displays, buckets of flowers and counter visible. Never outside.",
+"buy pet food":"Inside a pet supply store. Pet food shelves and pet products visible. Never outside.",
+"check special orders":"Inside the relevant shop or service counter. Never outside.",
+"wait at checkout":"Inside supermarket checkout area. Cash register, queue area and checkout lane visible. Never outside.",
+"use thermal bags":"Inside supermarket checkout or bagging area. Thermal bags and groceries visible. Never outside.",
+"bakery pickup":"Inside a bakery. Bread shelves, pastry display and counter service visible. Never outside.",
+"go pharmacy":"Inside a pharmacy. Pharmacy counter, medicine shelves and health products visible. Never outside.",
+"go florist":"Inside a florist shop. Flower displays and counter visible. Never outside.",
+"go delicatessen":"Inside a delicatessen. Gourmet food counter and display cases visible. Never outside.",
+"return online packages":"Inside parcel collection point or service counter. Packages and reception counter visible. Never outside.",
+"dry cleaner delivery":"Inside a dry-cleaning shop. Garment racks and reception counter visible. Never outside.",
+"post office":"Inside a post office. Service counter, mail boxes and parcels visible. Never outside.",
+"take dogs vet":"Inside a veterinary clinic. Reception area or examination room visible. Never outside.",
+"take dogs groomer":"Inside a pet grooming salon. Grooming table or pet-care environment visible. Never outside."
+};
+if(locks[loc]) return `LOCATION LOCK:\n${locks[loc]}\n\n`;
+if(locks[a]) return `ACTIVITY LOCATION LOCK:\n${locks[a]}\n\n`;
+return '';
+}
+
+
+function postureBlock(){
+  const p=V('bodyPosture');
+  let extra='';
+  if(p==='auto'){
+    const a=V('activity');
+    const crouchActs=['select fresh produce','check pockets','load washing machines','empty trash cans','pick dog excrement','clean dog urine','clean shelves remove jars','clean shoe soles','sweep mop floor','organize lower shelves'];
+    const seatedActs=['polishing silverware','counting silverware','organizing cutlery drawers','reviewing task lists','documenting completed work','preparing housekeeping schedule'];
+    const reachActs=['organize closet','arrange books','dust shelves','organize shelves','replenishing cleaning supplies','restock supplies'];
+    if(crouchActs.indexOf(a)>=0) extra='Suggested posture: crouching or leaning down, clearly using the hands near a lower shelf, laundry basket or floor-level object.';
+    else if(seatedActs.indexOf(a)>=0) extra='Suggested posture: seated at a table or work surface, with the task clearly visible.';
+    else if(reachActs.indexOf(a)>=0) extra='Suggested posture: reaching toward shelves or cabinets, not a static upright portrait.';
+    else extra='Posture may be natural, but it must support the selected activity and avoid a static portrait if the task requires movement.';
+  }else{
+    extra='Selected posture must be clearly visible and must override the default upright standing pose.'; if(p==='slight_bow') extra+=' Perform a restrained formal domestic-service bow: small forward inclination from the hips, spine controlled, head slightly lowered, hands naturally composed in front; subtle and believable, never theatrical, never deep curtsy.';
+  }
+  return `BODY POSTURE LOCK:
+Selected posture: ${T('bodyPosture')}.
+${extra}
+The activity must be visually readable through the body position.
+POSTURE IS NOT A SECOND ACTIVITY: never invent a drawer, floor object, silver-polishing task, cupboard inspection, carried weight or shelf interaction merely because of posture.
+The selected Activity remains the sole task. Posture only describes how the body performs that task.
+If a manually selected posture conflicts physically with the activity, preserve the activity and adapt the posture as closely as possible without creating a second action.
+Do not default to standing upright unless selected.
+The posture must remain compatible with the selected activity and location.
+
+`;
+}
+
+function selectedDogs(){return [...document.querySelectorAll('#dogsGrid input[data-dog]:checked')].map(x=>x.dataset.dog);}
+const DOGS={
+ Bimba:'a female golden/cinnamon Cocker Spaniel with long spaniel ears', Bijou:'a small white Poodle', Oscar:'a Golden Retriever',
+ 'Napoléon':'a wire-haired Dachshund, black-and-tan, predominantly black with tan markings on muzzle, eyebrows, chest and legs',
+ 'Joséphine':'a wire-haired Dachshund, black-and-tan, predominantly black with tan markings on muzzle, eyebrows, chest and legs',
+ Coco:'a small white Maltese dog with silky white coat', Lola:'a small white Maltese dog with silky white coat',
+ Bruc:'a large Anatolian Shepherd / Kangal with sand/light-cream coat, dark muzzle mask and darker ears'
+};
+function petBlock(){const ds=selectedDogs();if(!ds.length)return 'DOG PRESENCE: No household dogs selected. Do not invent dogs.\n\n';return `DOG IDENTITY LOCK — ABSOLUTE:\nRender exactly ${ds.length} selected household dog${ds.length===1?'':'s'}: ${ds.map(n=>n+' = '+DOGS[n]).join('; ')}.\nKeep every selected dog distinct. Respect breed, coat and relative size, especially Bruc as much larger than the small dogs. Never merge, duplicate, substitute, recolor, change breed, omit a selected dog or invent an unselected dog. Dog-related activities must use the selected dogs rather than hard-coded default pets.\n\n`;}
+function maidControls(){const role=V('secondaryRole'); const on=role==='maid'; if(E('characterCount')) E('characterCount').value=(role&&role!=='none')?'two':'one'; E('maidInteractionWrap').style.display=on?'':'none';E('secondMaidUniformWrap').style.display=on?'':'none';const n=E('referenceImageNotice');if(n){n.textContent=on?'⚠️ 📷📷 2 imágenes necesarias — IMAGE A = protagonista · IMAGE B = segunda criada':'📷 1 imagen necesaria — IMAGE A = protagonista';n.style.borderColor=on?'#9f3a2d':'#ded4c8';n.style.background=on?'#fff4f1':'white';}}
+function referenceBlock(){return V('secondaryRole')==='maid'?`REFERENCE IMAGES REQUIRED: 2\nIMAGE A = PRIMARY MAID IDENTITY REFERENCE\nIMAGE B = SECOND MAID IDENTITY REFERENCE\nNever blend, swap or duplicate identities.\n\n`:`REFERENCE IMAGES REQUIRED: 1\nIMAGE A = PRIMARY MAID IDENTITY REFERENCE\n\n`;}
+function secondMaidBlock(){if(V('secondaryRole')!=='maid')return '';const modes={natural:'Use natural interaction chosen according to task mechanics, including shared attention or brief eye contact when believable.',ambient:'Second maid is a distinct, recognizable coworker in the background.',same_zone:'Both maids work in the same functional area on complementary parts of the task.',working_together:'Both maids actively share the task; coordinate hands, gaze, positions and distance without mirrored posing.'};const uniforms={auto_house:'Give the second maid a believable related but not automatically identical uniform from the same private household.',same:'Use the same uniform model as the primary maid, with natural individual fit.',different_color:'Use a related household-service uniform in a different restrained practical color/pattern.',different_model:'Use a different believable domestic-service uniform model from the same household wardrobe.'}; const uniformHandling=/uniform|service shoes|apron|appearance|slippers/i.test(V('activity')); const handlingRule=uniformHandling?'\nUNIFORM-HANDLING SCENE LOCK: The maids are handling, sorting, ironing, folding, preparing or inspecting household uniforms. The uniforms being handled MUST show a believable assortment from the household wardrobe: different models and/or restrained colors/patterns. Do NOT make every hanging, folded or handled uniform identical to the uniform currently worn by either maid. Repetition of one identical uniform across the whole scene is forbidden.\n':'';return `TWO-MAID IDENTITY ASSIGNMENT — ABSOLUTE LOCK:\nIMAGE A is the sole identity reference for the PRIMARY MAID. IMAGE B is the sole identity reference for the SECOND MAID. Reproduce two distinct real individuals. Never blend, average, swap or duplicate their facial identities. IMAGE B has this role ONLY when Otra criada is selected.\n\nSECOND MAID — ACTIVE CO-WORKER COMPOSITION LOCK:\nThe second maid is a genuine secondary working character, not a clone or automatic distant decoration. ${modes[V('maidInteraction')]} ${uniforms[V('secondMaidUniform')]} ${handlingRule} Direct eye contact between the two maids is allowed when natural for conversation or coordination, but never force constant eye contact.\n\n`;}
+function headwearBlock(){const h=V('headwear');if(h==='none')return `HEADWEAR LOCK: No coif, cap, hairnet or maid headpiece. Hair remains uncovered according to selected hairstyle.\n\n`;if(h==='kitchen_mesh')return `KITCHEN MESH CAP — FULL HAIR CONTAINMENT ABSOLUTE LOCK:\nA breathable white kitchen mesh cap contains 100% of the hair, including crown, sides, rear, fringe, bun, ponytail or braid. Zero visible hair outside the cap perimeter. The selected hairstyle exists only under the mesh and may create natural volume beneath it. Never expose a bun, nape strands or side locks.\n\n`;return `FORMAL SERVICE HEADPIECE — FLAT UPRIGHT MAID CAP — ABSOLUTE LOCK:\nUse a small ${h==='formal_trim'?'traditionally trimmed':'plain clean'} white formal service headpiece attached to the hairstyle. Its principal plane is upright/vertical, like a thin flat decorative element projecting upward from the hairstyle. POSITION LOCK: place it low on the hairstyle at approximately ear height, like a small tiara/headband crossing the head from side to side; its lower attachment points visually align around the upper-ear/temple level. Never perch it high on the crown or at the back of the bun. It does NOT cover or contain the hair. Hair remains visible around and below it. Never skullcap, kippah, yarmulke, solideo, horizontal crown disk, bonnet, mob cap, shower cap, hairnet or full-head covering.\n\n`;}
+
+function negativePromptBlock(){
+let n=`NO unselected headwear, NO wrong coif construction, NO wrong dog breed, NO merged or duplicated selected dogs, NO blended second-maid identity, NO bright white buttons, NO opaque white plastic buttons, NO oversized buttons, NO plastic-looking shoes, NO glossy shoes, NO rubber-looking shoes, NO wrong dog breed, NO short dress, NO calf-length dress, NO long skirt, NO mid-thigh apron, NO office break room, NO company canteen, NO hotel staff room, NO wrong footwear`;
+if(V('uniformType')==='work'){
+n+=`, NO Peter Pan collar in work uniform, NO white collar on work uniform, NO service collar in work uniform, NO lace collar in work uniform, NO lace cuffs in work uniform, NO service cuffs in work uniform, NO lapel piping, NO piping along V opening, NO tailored lapels, NO jacket lapels, NO hotel-uniform lapels, NO nurse-uniform lapels, NO chest pocket, NO breast pocket, NO pen pocket, NO loafers, NO moccasins, NO penny loafers, NO leather slip-ons, NO driving shoes, NO dress shoes, NO trapezoid bib, NO triangular bib, NO tapered bib, NO hourglass apron, NO chef apron, NO kitchen apron, NO inward slanted bib sides, NO missing bib apron, NO half apron when bib apron selected`;
+}else{
+n+=`, NO missing service apron, NO missing lace on service collar/cuffs/apron, NO plain untrimmed service collar, NO missing white Peter Pan collar, NO open Peter Pan collar, NO coloured service collar, NO service shirt collar, NO lapel service collar, NO open service neckline, NO visible throat gap, NO unfastened top button, NO unbuttoned service uniform, NO open placket, NO missing lace cuffs, NO short sleeves on service uniform, NO cap sleeves on service uniform, NO placket below waist, NO visible placket behind apron, NO buttons on service skirt, NO extra service buttons, NO five-button service uniform, NO six-button service uniform, NO white shoes with service uniform`;
+}
+if(V('location')==='street_exterior'){
+n+=`, NO outdoor supermarket scenes, NO outdoor florist scenes, NO outdoor pharmacy scenes, NO outdoor bakery scenes, NO outdoor pet shop scenes when the activity requires being inside a shop`;
+}
+return `NEGATIVE PROMPT:\n${n}.`;
+}
+
+function generatePrompt(){try{compat();maidControls(); const p=referenceBlock()+characterBlock()+`
+PRIMARY CHARACTER IDENTITY:
+Use uploaded reference as exact facial identity source.
+
+`+bodyProfileBlock()+globalContextBlock()+uniformBlock()+headwearBlock()+secondMaidBlock()+`
+SCENE AND ACTION:
+Location: ${T('location')}
+Activity: ${T('activity')}
+Gaze: ${T('gaze')}
+Posture: ${T('bodyPosture')}
+Selected dogs: ${selectedDogs().length?selectedDogs().join(', '):'none'}
+
+`+locationLockBlock()+postureBlock()+petBlock()+`CAMERA AND STYLE:
+Shot: ${T('shot')}
+Format: ${T('format')}
+Lens: ${T('lens')}
+Camera angle: ${T('angle')}
+Visual style: ${T('visualStyle')}
+Visual style prompt: ${OPT_PROMPT('visualStyle')}
+
+ABSOLUTE FRAMING LOCK:
+Each selected shot type determines exactly how much of the body is visible. Never mix framing definitions.
+
+FRAMING / ACTIVITY COHERENCE LOCK:
+The selected shot must allow the activity to be visually understandable.
+If the activity mainly involves hands, objects, laundry, trays, pockets, shopping items, cleaning tools or lower-body action, use medium shot, American shot, three-quarter shot or full body framing.
+
+CONTEXT COHERENCE LOCK:
+The selected activity belongs to the selected location. Do not invent a different room or move the task elsewhere. Service areas must look like private residential service areas, never corporate staff rooms, employee cafeterias, hotels or institutional workplaces.
+
+${negativePromptBlock()}`; E('output').value=p; setStatus('✓ Prompt generado · '+p.length.toLocaleString('es-ES')+' caracteres');}catch(err){setStatus('⚠ Error generando prompt: '+err.message);} return false;}
+const PRESET_LIBRARY_KEY='criadas_v6815_named_presets';
+const DRAFT_KEY='criadas_v6815_working_draft';
+
+function collectPreset(){
+  const preset={version:'6.8.15',values:{},selectedDogs:selectedDogs()};
+  document.querySelectorAll('select').forEach(function(el){
+    if(el && el.id) preset.values[el.id]=el.value;
+  });
+  return preset;
+}
+function normalizePresetObject(d){
+  if(!d || typeof d!=='object') return null;
+  if(d.values && typeof d.values==='object') return d;
+  // Backward compatibility with 6.8.11/6.8.10 flat preset objects.
+  const values={};
+  Object.keys(d).forEach(function(k){
+    if(k!=='selectedDogs' && k!=='version') values[k]=d[k];
+  });
+  return {version:d.version||'legacy',values:values,selectedDogs:Array.isArray(d.selectedDogs)?d.selectedDogs:[]};
+}
+function applyPresetObject(input,quiet){
+  const d=normalizePresetObject(input);
+  if(!d) throw new Error('Formato de preset no válido');
+  const vals=d.values||{};
+  // Location first, then rebuild activity options.
+  if(vals.location && E('location')) E('location').value=vals.location;
+  fillActivities();
+  Object.keys(vals).forEach(function(k){
+    if(k==='location' || k==='activity') return;
+    const el=E(k);
+    if(el && el.tagName==='SELECT' && [...el.options].some(o=>o.value===vals[k])) el.value=vals[k];
+  });
+  if(vals.activity && E('activity') && [...E('activity').options].some(o=>o.value===vals.activity)) E('activity').value=vals.activity;
+  document.querySelectorAll('#dogsGrid input[data-dog]').forEach(function(cb){
+    cb.checked=Array.isArray(d.selectedDogs) && d.selectedDogs.includes(cb.dataset.dog);
+  });
+  maidControls();
+  generatePrompt();
+  if(!quiet) setStatus('✓ Preset cargado correctamente');
+  return true;
+}
+function storageAvailable(){
+  try{
+    const k='__criadas_storage_test__';
+    window.localStorage.setItem(k,'1');
+    window.localStorage.removeItem(k);
+    return true;
+  }catch(e){return false;}
+}
+function saveWorkingDraft(){
+  if(!storageAvailable()) return false;
+  try{
+    window.localStorage.setItem(DRAFT_KEY,JSON.stringify(collectPreset()));
+    return true;
+  }catch(e){return false;}
+}
+function restoreWorkingDraft(){
+  if(!storageAvailable()) return false;
+  try{
+    const raw=window.localStorage.getItem(DRAFT_KEY);
+    if(!raw) return false;
+    applyPresetObject(JSON.parse(raw),true);
+    setStatus('✓ Configuración de trabajo recuperada automáticamente');
+    return true;
+  }catch(e){return false;}
+}
+function getPresetLibrary(){
+  if(!storageAvailable()) return {};
+  try{return JSON.parse(window.localStorage.getItem(PRESET_LIBRARY_KEY)||'{}')||{};}catch(e){return {};}
+}
+function setPresetLibrary(lib){window.localStorage.setItem(PRESET_LIBRARY_KEY,JSON.stringify(lib||{}));}
+function presetNames(){return Object.keys(getPresetLibrary()).sort((a,b)=>a.localeCompare(b,'es'));}
+function choosePresetName(title,allowNew){
+  const names=presetNames();
+  if(allowNew){const suggested='Preset '+(names.length+1);return window.prompt(title,suggested);}
+  return null;
+}
+function chooseExistingPreset(title,callback){
+  const names=presetNames();
+  if(!names.length){window.alert('No hay presets guardados.');return;}
+  const dlg=E('presetDialog'), sel=E('presetSelect'), ttl=E('presetDialogTitle');
+  ttl.textContent=title; sel.innerHTML='';
+  names.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.appendChild(o);});
+  dlg._presetCallback=callback; dlg.showModal();
+}
+function closePresetDialog(){const d=E('presetDialog'); if(d.open)d.close(); d._presetCallback=null;}
+function confirmPresetDialog(){const d=E('presetDialog'), cb=d._presetCallback, name=E('presetSelect').value; d.close(); d._presetCallback=null; if(cb&&name)cb(name);}
+function savePreset(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  try{
+    if(!storageAvailable()) throw new Error('El navegador no permite almacenamiento local en este contexto.');
+    const name=choosePresetName('Nombre del preset',true); if(!name||!name.trim()) return false;
+    const clean=name.trim(), lib=getPresetLibrary(); lib[clean]=collectPreset(); setPresetLibrary(lib);
+    window.localStorage.setItem(DRAFT_KEY,JSON.stringify(lib[clean]));
+    setStatus('✓ Preset «'+clean+'» guardado');
+  }catch(err){setStatus('⚠ Error guardando preset: '+err.message);}
+  return false;
+}
+function loadPreset(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  chooseExistingPreset('Cargar preset',function(name){try{const lib=getPresetLibrary();if(!lib[name])return;applyPresetObject(lib[name],false);saveWorkingDraft();setStatus('✓ Preset «'+name+'» cargado');}catch(err){setStatus('⚠ Error cargando preset: '+err.message);}});return false;
+}
+function duplicatePreset(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  chooseExistingPreset('Duplicar preset',function(name){try{const lib=getPresetLibrary();if(!lib[name])return;const newName=window.prompt('Nombre de la copia',name+' — copia');if(!newName||!newName.trim())return;lib[newName.trim()]=JSON.parse(JSON.stringify(lib[name]));setPresetLibrary(lib);setStatus('✓ Preset duplicado como «'+newName.trim()+'»');}catch(err){setStatus('⚠ Error duplicando preset: '+err.message);}});return false;
+}
+function deletePreset(ev){
+  if(ev){ev.preventDefault();ev.stopPropagation();}
+  chooseExistingPreset('Eliminar preset',function(name){try{const lib=getPresetLibrary();if(!lib[name])return;if(!window.confirm('¿Eliminar el preset «'+name+'»?'))return;delete lib[name];setPresetLibrary(lib);setStatus('✓ Preset «'+name+'» eliminado. La configuración actual sigue en pantalla.');saveWorkingDraft();}catch(err){setStatus('⚠ Error eliminando preset: '+err.message);}});return false;
+}
+function copyPrompt(){E('output').select();document.execCommand('copy');return false;} function downloadPrompt(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([E('output').value],{type:'text/plain'}));a.download='prompt_criadas_v6_8_16.txt';a.click();return false;}
+window.addEventListener('DOMContentLoaded',function(){
+  fillActivities();
+  maidControls();
+
+  const saveBtn=E('savePresetBtn'), loadBtn=E('loadPresetBtn'), dupBtn=E('duplicatePresetBtn'), delBtn=E('deletePresetBtn');
+  if(saveBtn) saveBtn.addEventListener('click',savePreset);
+  if(loadBtn) loadBtn.addEventListener('click',loadPreset);
+  if(dupBtn) dupBtn.addEventListener('click',duplicatePreset);
+  if(delBtn) delBtn.addEventListener('click',deletePreset);
+
+  const sp=E('secondaryRole');
+  if(sp) sp.addEventListener('change',function(){maidControls();generatePrompt();saveWorkingDraft();});
+
+  document.querySelectorAll('select').forEach(function(el){
+    el.addEventListener('change',function(){
+      if(el.id==='location') fillActivities();
+      maidControls();
+      generatePrompt();
+      saveWorkingDraft();
+    });
+  });
+  document.querySelectorAll('#dogsGrid input[data-dog]').forEach(function(cb){
+    cb.addEventListener('change',function(){generatePrompt();saveWorkingDraft();});
+  });
+
+  if(!restoreWorkingDraft()) generatePrompt();
+
+  // Last-resort persistence before browser/tab navigation or an iOS page reload.
+  window.addEventListener('pagehide',saveWorkingDraft);
+  window.addEventListener('beforeunload',saveWorkingDraft);
+});
+</script></head><body><header><h1>Prompt Builder Criadas V6.8.16 Stable + módulos 7.0.17</h1><p>V6.8.16: cuatro botones de servicio reforzados, encaje en cuello, variedad de uniformes manipulados y selector desplegable de presets.</p></header><main><div id="status">✓ Cargado</div>
+<section><h2>Personajes</h2><div class="grid"><label>Número de personajes<select id="characterCount"><option value="one">Un personaje</option><option value="two">Dos personajes</option></select></label><label>Rol del segundo personaje<select id="secondaryRole"><option value="none">Sin segundo personaje</option>
+<option value="lady">Señora de la casa</option>
+<option value="maid">Criada</option>
+<option value="guest">Invitada</option>
+<option value="delivery">Repartidor</option>
+<option value="supplier">Proveedor</option>
+<option value="vet">Veterinario/a</option>
+<option value="gardener">Jardinero/a</option>
+<option value="driver">Chófer</option></select></label><label id="maidInteractionWrap" style="display:none">Interacción con la segunda criada<select id="maidInteraction"><option value="natural">Interacción natural</option><option value="ambient">Ambiental / al fondo</option><option value="same_zone">Misma zona de trabajo</option><option value="working_together">Trabajando juntas</option></select></label><label id="secondMaidUniformWrap" style="display:none">Uniforme segunda criada<select id="secondMaidUniform"><option value="auto_house">Variación automática de la casa</option><option value="same">Igual que protagonista</option><option value="different_color">Diferente color</option><option value="different_model">Diferente modelo</option></select></label></div></section>
+
+<section><h2>Perfil corporal</h2><div class="grid">
+<label>Edad<select id="bodyAge">
+<option value="auto">Automática</option>
+<option value="18">18 años</option><option value="22">22 años</option><option value="25">25 años</option><option value="28">28 años</option>
+<option value="30">30 años</option><option value="35">35 años</option><option value="40">40 años</option><option value="45">45 años</option>
+<option value="50">50 años</option><option value="55">55 años</option><option value="60">60 años</option><option value="65">65 años</option>
+<option value="70">70 años</option></select></label>
+<label>Altura<select id="bodyHeight">
+<option value="auto">Automática</option>
+<option value="150">150 cm</option><option value="155">155 cm</option><option value="160">160 cm</option><option value="165">165 cm</option>
+<option value="168">168 cm</option><option value="170">170 cm</option><option value="172">172 cm</option><option value="175">175 cm</option>
+<option value="178">178 cm</option><option value="181">181 cm</option><option value="183">183 cm</option><option value="185">185 cm</option></select></label>
+<label>Peso<select id="bodyWeight">
+<option value="auto">Automático</option>
+<option value="45">45 kg</option><option value="50">50 kg</option><option value="55">55 kg</option><option value="60">60 kg</option>
+<option value="65">65 kg</option><option value="67.5">67,5 kg</option><option value="70">70 kg</option><option value="75">75 kg</option>
+<option value="80">80 kg</option><option value="85">85 kg</option><option value="90">90 kg</option><option value="95">95 kg</option>
+<option value="100">100 kg</option></select></label>
+<label>Talla uniforme<select id="uniformSize">
+<option value="auto">Automática</option>
+<option value="34">34</option><option value="36">36</option><option value="38">38</option><option value="40">40</option>
+<option value="42">42</option><option value="44">44</option><option value="46">46</option><option value="48">48</option>
+<option value="50">50</option><option value="52">52</option><option value="54">54</option><option value="56">56</option></select></label>
+<label>Constitución<select id="bodyBuild">
+<option value="auto">Automática</option>
+<option value="very slim">Muy prima</option>
+<option value="slim">Prima</option>
+<option value="slender">Esbelta</option>
+<option value="normal">Normal</option>
+<option value="athletic">Atlética</option>
+<option value="sturdy">Robusta</option>
+<option value="corpulent">Corpulenta</option>
+<option value="slight overweight">Ligero sobrepeso</option>
+<option value="visible overweight">Sobrepeso visible</option>
+<option value="obese">Obesa</option></select></label>
+<label>Forma corporal<select id="bodyShape">
+<option value="auto">Automática</option>
+<option value="hourglass">Reloj de arena</option>
+<option value="pear">Pera</option>
+<option value="apple">Poma / manzana</option>
+<option value="rectangle">Rectángulo</option>
+<option value="inverted triangle">Triángulo invertido</option>
+<option value="oval">Ovalada</option></select></label>
+<label>Medidas pecho<select id="bustMeasure">
+<option value="auto">Automática</option>
+<option value="80">80 cm</option><option value="85">85 cm</option><option value="90">90 cm</option><option value="95">95 cm</option>
+<option value="100">100 cm</option><option value="105">105 cm</option><option value="110">110 cm</option><option value="115">115 cm</option>
+<option value="120">120 cm</option></select></label>
+<label>Medidas cintura<select id="waistMeasure">
+<option value="auto">Automática</option>
+<option value="60">60 cm</option><option value="65">65 cm</option><option value="69">69 cm</option><option value="70">70 cm</option>
+<option value="75">75 cm</option><option value="80">80 cm</option><option value="85">85 cm</option><option value="90">90 cm</option>
+<option value="95">95 cm</option><option value="100">100 cm</option></select></label>
+<label>Medidas cadera<select id="hipMeasure">
+<option value="auto">Automática</option>
+<option value="85">85 cm</option><option value="90">90 cm</option><option value="95">95 cm</option><option value="100">100 cm</option>
+<option value="101">101 cm</option><option value="105">105 cm</option><option value="110">110 cm</option><option value="115">115 cm</option>
+<option value="120">120 cm</option><option value="125">125 cm</option></select></label>
+<label>Ajuste del uniforme<select id="uniformFit">
+<option value="normal">Normal</option>
+<option value="loose">Ligeramente amplio</option>
+<option value="comfortable fitted">Cómodo pero entallado</option>
+<option value="slightly tight">Ligeramente ajustado</option>
+<option value="tight">Ajustado</option></select></label>
+</div></section>
+
+<section><h2>Uniforme</h2><div class="grid"><label>Tipo de uniforme<select id="uniformType" onchange="compat();generatePrompt()"><option value="work">Uniforme de trabajo</option>
+<option value="service">Uniforme de servicio</option></select></label><label>Tipo de delantal<select id="apronType"><option value="work half">Trabajo — medio delantal</option>
+<option value="work bib">Trabajo — delantal con babero</option>
+<option value="service lace">Servicio — medio delantal con encaje</option>
+<option value="service bib lace">Servicio — delantal con pitet/babero y encaje</option>
+<option value="none">Sin delantal</option></select></label><label>Tejido<select id="fabric">
+<option value="micro stripes">Trabajo — micro-rayas</option>
+<option value="oxford stripe">Trabajo — Oxford rayado</option>
+<option value="candy stripe">Trabajo — Candy stripe</option>
+<option value="milleraies">Trabajo — Milleraies</option>
+<option value="gingham">Trabajo — Gingham clásico</option>
+<option value="mini gingham">Trabajo — Mini gingham</option>
+<option value="tattersall check">Trabajo — Tattersall check</option>
+<option value="windowpane">Trabajo — Windowpane</option>
+<option value="twill">Trabajo — Sarga (twill)</option>
+<option value="chambray">Trabajo — Chambray</option>
+<option value="seersucker">Trabajo — Seersucker</option>
+<option value="polka dot">Trabajo — Polka dot</option>
+<option value="fine poplin">Servicio — Popelín fino</option>
+<option value="barathea">Servicio — Barathea</option>
+<option value="ottoman">Servicio — Ottoman</option>
+<option value="faille">Servicio — Faille</option>
+<option value="crepe">Servicio — Crepé</option>
+<option value="tropical wool">Servicio — Tropical wool</option>
+<option value="prince of wales">Servicio — Príncipe de Gales</option>
+<option value="small houndstooth">Servicio — Houndstooth pequeño</option>
+<option value="matte satin">Servicio — Satén mate</option>
+<option value="satin">Servicio — Ras (satén)</option>
+<option value="satin faille">Servicio — Faille satinada</option>
+<option value="jacquard">Servicio — Jacquard (opcional)</option>
+</select></label><label>Color principal<select id="color"><option value="ivory">Marfil</option>
+<option value="cream">Crema</option>
+<option value="mushroom">Mushroom</option>
+<option value="pale lavender">Lavanda pálido</option>
+<option value="dusty blue">Dusty blue</option>
+<option value="soft sage">Soft sage</option>
+<option value="sage green">Sage green</option>
+<option value="verdigris">Verdigris</option>
+<option value="warm taupe">Warm taupe</option>
+<option value="muted rose">Muted rose</option>
+<option value="navy">Navy</option>
+<option value="charcoal">Charcoal</option>
+<option value="black">Negro</option>
+<option value="burgundy">Burgundy</option>
+<option value="chocolate">Chocolate</option></select></label><label>Peinado<select id="hairstyle"><option value="preserve">Conservar peinado de referencia</option>
+<option value="low bun">Moño bajo ordenado</option>
+<option value="centered bun">Moño bajo centrado</option>
+<option value="hairnet">Moño con redecilla</option>
+
+<option value="low ponytail">Coleta baja</option>
+<option value="claw clip updo">Pelo recogido con pinza</option>
+<option value="pinned back">Cabello recogido</option>
+<option value="bob">Bob</option>
+<option value="pixie">Pixie</option></select></label><label>Cofia / tocado<select id="headwear"><option value="none">Sin cofia</option><option value="kitchen_mesh">Redecilla integral de cocina</option><option value="formal_clean">Cofia formal lisa</option><option value="formal_trim">Cofia formal tradicional con ribete</option></select></label><label>Medias<select id="stockings"><option value="bare">Sin medias</option>
+<option value="porcelain nude">Nude porcelana</option>
+<option value="natural nude">Nude natural</option>
+<option value="champagne nude">Champagne nude</option>
+<option value="sunkissed nude">Nude sunkissed</option>
+<option value="true grey">Gris real</option>
+<option value="black 15 den">Negro 15 den</option>
+<option value="black 40 den">Negro 40 den</option></select></label><label>Estado del uniforme<select id="uniformState"><option value="clean pressed">Limpio y planchado</option>
+<option value="normal used">Uso normal</option>
+<option value="slightly worn">Algo gastado</option>
+<option value="end shift">Final de jornada</option>
+<option value="slightly dirty">Ligeramente sucio</option>
+<option value="task stained">Manchado por la tarea</option>
+<option value="heavy work stained">Muy manchado por trabajo duro</option></select></label></div></section>
+<section><h2>Escena</h2><div class="grid"><label>Localización<select id="location" onchange="fillActivities();generatePrompt()"><option value="dining_room">Comedor</option>
+<option value="living_room">Salón</option>
+<option value="kitchen">Cocina</option>
+<option value="library">Biblioteca</option>
+<option value="terrace">Terraza</option>
+<option value="service_corridor">Pasillo de servicio</option>
+<option value="master_suite">Suite principal</option>
+<option value="staff_room">Habitación del personal</option>
+<option value="master_bathroom">Baño principal</option>
+<option value="garden">Jardín</option>
+<option value="laundry">Lavandería</option>
+<option value="pantry">Despensa</option>
+<option value="staircase">Escalera</option>
+<option value="dressing_room">Vestidor</option>
+<option value="breakfast_room">Salita de desayunar</option>
+<option value="rear_service_entrance">Entrada de servicio trasera</option>
+<option value="street_exterior">Exterior de la residencia / calle</option>
+<option value="lady_study">Despacho privado de la señora</option>
+<option value="staff_dining_room">Comedor del personal</option>
+<option value="staff_bathroom">Baño del personal</option>
+<option value="main_door">Puerta principal</option>
+<option value="broom_closet">Cuarto de limpieza</option>
+<option value="service_yard">Patio de servicio</option></select></label><label>Actividad<select id="activity" onchange="generatePrompt()"></select></label><label>Postura corporal<select id="bodyPosture">
+<option value="auto">Automática</option>
+<option value="standing">De pie</option>
+<option value="maid_position">Posición de la criada — manos delante del delantal</option>
+<option value="slight_bow">Ligera reverencia</option>
+<option value="walking">Caminando</option>
+<option value="crouching">Agachada</option>
+<option value="kneeling">Arrodillada</option>
+<option value="leaning_forward">Inclinada hacia delante</option>
+<option value="on_tiptoe">De puntillas</option>
+<option value="seated">Sentada</option>
+<option value="leaning_table">Ligeramente apoyada en una mesa</option>
+</select></label><label>Gossos / perros<div id="dogsGrid" style="margin-top:6px;font-weight:400;display:grid;grid-template-columns:1fr 1fr;gap:6px"><span><input type="checkbox" data-dog="Bimba"> Bimba</span><span><input type="checkbox" data-dog="Bijou"> Bijou</span><span><input type="checkbox" data-dog="Oscar"> Oscar</span><span><input type="checkbox" data-dog="Napoléon"> Napoléon</span><span><input type="checkbox" data-dog="Joséphine"> Joséphine</span><span><input type="checkbox" data-dog="Coco"> Coco</span><span><input type="checkbox" data-dog="Lola"> Lola</span><span><input type="checkbox" data-dog="Bruc"> Bruc</span></div></label><label>Mirada<select id="gaze"><option value="auto">Automática</option>
+<option value="camera">Mirando a cámara</option>
+<option value="soft_camera">Mirada suave a cámara</option>
+<option value="task">Mirando al trabajo</option>
+<option value="other_person">Mirando a otra persona</option>
+<option value="down">Mirando hacia abajo</option>
+<option value="up">Mirando hacia arriba</option>
+<option value="mirror">Mirando al espejo</option>
+<option value="off_frame">Mirando fuera de encuadre</option>
+<option value="closed_eyes">Ojos cerrados</option>
+<option value="lady">Mirando a la señora</option>
+<option value="dogs">Mirando a los perros</option>
+<option value="guests">Mirando a los invitados</option>
+<option value="object">Mirando un objeto</option>
+<option value="documents">Mirando documentos</option>
+<option value="flowers">Mirando flores</option></select></label><label>Momento narrativo<select id="narrativeMoment"><option value="madrugada">Rutina de madrugada</option>
+<option value="antes_desayuno">Antes del desayuno</option>
+<option value="rutina_manana">Rutina de mañana</option>
+<option value="preparando_invitados">Preparando llegada de invitados</option>
+
+<option value="recepcion">Durante una recepción</option>
+<option value="servicio_tarde">Servicio de tarde</option>
+
+<option value="despues_cena">Después de la cena</option>
+
+<option value="final_jornada">Final de jornada</option>
+<option value="cierre_casa">Preparando cierre de la casa</option>
+<option value="despues_reprimenda">Después de una reprimenda</option>
+<option value="limpieza_profunda">Día de limpieza profunda</option>
+<option value="lavanderia">Día de lavandería</option>
+<option value="compras">Día de compras</option></select></label><label>Nivel de formalidad<select id="formalityLevel"><option value="trabajo_cotidiano">Trabajo cotidiano</option>
+<option value="trabajo_cuidado">Trabajo cuidado</option>
+<option value="servicio_formal">Servicio formal</option>
+<option value="servicio_gala">Servicio de gala</option>
+<option value="evento_especial">Evento especial</option></select></label><label>Actividad de la casa<select id="houseActivity"><option value="casa_dormida">Casa dormida</option>
+<option value="casa_despertando">Casa despertando</option>
+<option value="actividad_moderada">Actividad moderada</option>
+<option value="actividad_intensa">Actividad intensa</option>
+<option value="visita_importante">Visita importante</option>
+<option value="evento_formal">Evento formal</option></select></label><label>Iluminación<select id="lighting"><option value="natural_manana">Luz natural de mañana</option>
+<option value="hora_dorada">Hora dorada</option>
+<option value="interior_suave">Luz interior suave</option>
+<option value="calida_tarde">Luz cálida de tarde</option>
+<option value="flash_directo">Flash directo</option>
+<option value="nublada_suave">Luz nublada suave</option></select></label><label>Estado emocional<select id="emotionalState"><option value="neutral">Neutral profesional</option>
+<option value="concentrada">Concentrada</option>
+<option value="atenta">Atenta</option>
+<option value="sonrisa_suave">Sonrisa suave</option>
+<option value="sonrisa_cordial">Sonrisa cordial</option>
+<option value="alegre">Alegre</option>
+<option value="recibiendo_instrucciones">Recibiendo instrucciones</option>
+<option value="escuchando">Escuchando atentamente</option>
+<option value="supervision">Bajo supervisión</option>
+<option value="intimidada">Ligeramente intimidada</option>
+<option value="reganada">Regañada</option>
+<option value="insegura">Insegura</option>
+<option value="cansada">Cansada</option>
+<option value="satisfecha">Satisfecha con el trabajo</option>
+<option value="orgullosa">Orgullosa</option>
+<option value="preocupada">Preocupada</option>
+<option value="pensativa">Pensativa</option>
+<option value="discreta">Discreta</option>
+<option value="reservada">Reservada</option>
+<option value="paciente">Paciente</option>
+<option value="nostalgica">Nostálgica</option>
+<option value="pausa">Relajada durante una pausa</option></select></label><label>Estado de la casa<select id="houseState"><option value="impecable">Impecable</option>
+<option value="ordenada">Ordenada</option>
+<option value="ligeramente_vivida">Ligeramente vivida</option>
+<option value="actividad_normal">Actividad normal</option>
+<option value="antes_invitados">Antes de invitados</option>
+<option value="durante_invitados">Durante invitados</option>
+<option value="despues_invitados">Después de invitados</option>
+
+<option value="limpieza_proceso">Limpieza en proceso</option>
+<option value="final_jornada">Final de jornada</option></select></label></div></section>
+<section><h2>Fotografía</h2><div class="grid"><label>Plano<select id="shot"><option value="ppp">Primerísimo primer plano — ojos, nariz y boca</option>
+<option value="pp">Primer plano — cabeza completa</option>
+<option value="pmc">Plano medio corto — cabeza, hombros y pecho</option>
+<option value="pm">Plano medio — cabeza hasta cintura</option>
+<option value="pa">Plano americano — cabeza hasta mitad de muslo</option>
+<option value="tq">Plano tres cuartos — cabeza hasta debajo de rodilla</option>
+<option value="full">Cuerpo entero — figura completa</option>
+<option value="wide">Plano general — figura completa + entorno dominante</option>
+<option value="xwide">Gran plano general — entorno dominante, figura pequeña</option></select></label><label>Formato<select id="format"><option value="1:1">1:1 Cuadrado</option>
+<option value="4:5">4:5 Instagram portrait</option>
+<option value="2:3">2:3 Retrato clásico</option>
+<option value="3:4">3:4 Retrato tradicional</option>
+<option value="9:16">9:16 TikTok / Reels / Stories</option>
+<option value="9:19.5">9:19.5 iPhone full screen</option>
+<option value="1:2">1:2 Editorial vertical</option>
+<option value="3:2">3:2 Fotografía clásica</option>
+<option value="4:3">4:3 Tradicional</option>
+<option value="16:9">16:9 Pantalla moderna</option>
+<option value="21:9">21:9 Cine panorámico</option>
+<option value="2.39:1">2.39:1 Cine</option>
+<option value="5:4">5:4 Fotografía clásica</option>
+<option value="A4V">A4 Vertical</option>
+<option value="A4H">A4 Horizontal</option></select></label><label>Lente<select id="lens"><option value="18mm">18 mm gran angular</option>
+<option value="24mm">24 mm gran angular</option>
+<option value="28mm">28 mm documental</option>
+<option value="35mm">35 mm documental</option>
+<option value="50mm">50 mm normal</option>
+<option value="70mm">70 mm tele corto</option>
+<option value="85mm">85 mm retrato</option>
+<option value="105mm">105 mm retrato</option>
+<option value="135mm">135 mm teleobjetivo</option>
+<option value="200mm">200 mm teleobjetivo</option>
+<option value="300mm">300 mm teleobjetivo</option></select></label><label>Ángulo<select id="angle"><option value="eye">Altura de ojos</option>
+<option value="slightly_high">Ligeramente por encima</option>
+<option value="slightly_low">Ligeramente por debajo</option>
+<option value="high">Picado</option>
+<option value="low">Contrapicado</option>
+<option value="dramatic_low">Contrapicado dramático</option>
+<option value="overhead">Cenital</option>
+<option value="bird">Vista de pájaro</option>
+<option value="ceiling">Cámara de techo</option>
+<option value="ground">A ras de suelo</option>
+
+
+
+
+</select></label><label>Estilo visual<select id="visualStyle"><option value="documentary photography" data-prompt="documentary photography, natural private-residence realism, observational framing, realistic domestic-service scene">Fotografía documental</option>
+<option value="domestic reportage photography" data-prompt="domestic reportage photography, candid household-service realism, private residence, natural color">Reportaje doméstico</option>
+<option value="editorial photography" data-prompt="refined editorial photography, elegant but restrained private residence, no glamour styling">Fotografía editorial</option>
+<option value="uniform catalog photography" data-prompt="uniform catalog photography, clear garment visibility, accurate textile and construction details">Catálogo de uniformes</option>
+<option value="portrait character study" data-prompt="portrait character study, restrained emotional presence, clean identity focus">Retrato de personaje</option>
+<option value="cinematic photography" data-prompt="cinematic photography, controlled practical lighting, believable domestic mise-en-scene, film-still realism">Fotografía cinematográfica</option>
+<option value="analog photography" data-prompt="analog film photography, natural grain, restrained color response, believable optical softness, no digital overprocessing">Fotografía analógica</option>
+<option value="flat pencil ink illustration" data-prompt="flat simplified color blocks, visible hand-drawn pencil and ink contour lines, subtle sketch detail, elegant editorial illustration, soft muted palette, beige background accent, no photorealism, no 3D">Ilustración plana con contorno de lápiz/tinta</option>
+<option value="editorial watercolor" data-prompt="editorial watercolor illustration, controlled translucent washes, clear garment construction, restrained paper texture, elegant realistic proportions">Acuarela editorial</option>
+<option value="minimalist digital fashion illustration" data-prompt="minimalist digital fashion illustration, clean line art, soft neutral palette, semi-flat shading">Ilustración editorial minimalista</option>
+<option value="technical uniform illustration" data-prompt="technical uniform illustration, precise construction details, front-facing garment clarity">Ilustración técnica de uniforme</option>
+<option value="coloring_book_pure" data-prompt="TRUE COLOURING-BOOK PAGE: black outlines only on pure white paper; all enclosed areas remain pure white; no shading">Libro para colorear — blanco y negro puro</option></select></label><label>Destino de publicación<select id="publicationTarget"><option value="sin_destino">Sin destino específico</option>
+<option value="instagram_post">Instagram post</option>
+<option value="instagram_story">Instagram story</option>
+<option value="instagram_reel">Instagram reel cover</option>
+<option value="tiktok">TikTok</option>
+<option value="pinterest">Pinterest pin</option>
+<option value="revista_moda">Revista de moda</option>
+<option value="catalogo_uniformes">Catálogo de uniformes</option>
+<option value="catalogo_textil">Catálogo textil</option>
+<option value="ilustracion_novela">Ilustración de novela</option>
+<option value="storyboard">Storyboard</option>
+<option value="fotograma_cine">Fotograma de cine</option>
+<option value="expediente_personal">Expediente de personal</option></select></label><label>Composición<select id="composition"><option value="centrada">Centrada</option>
+<option value="tercios">Regla de los tercios</option>
+<option value="tercio_izq">Tercio izquierdo</option>
+<option value="tercio_der">Tercio derecho</option>
+<option value="simetria">Simetría arquitectónica</option>
+
+
+<option value="pasillo">Vista desde pasillo</option>
+<option value="otra_habitacion">Vista desde otra habitación</option>
+
+<option value="esquina">Desde esquina de habitación</option>
+
+
+</select></label><label>Composición narrativa<select id="narrativeComposition"><option value="normal">Normal</option>
+<option value="sobre_hombro">Sobre el hombro</option>
+<option value="desde_detras">Desde detrás</option>
+<option value="pov_parcial">POV parcial</option>
+<option value="pov_completo">POV completo</option>
+<option value="puerta">A través de una puerta</option>
+<option value="ventana">A través de una ventana</option>
+<option value="espejo">A través de un espejo</option>
+<option value="vigilancia">Cámara de vigilancia</option>
+<option value="oculto">Observador oculto</option></select></label><label>Tipo de cámara<select id="cameraType"><option value="profesional">Profesional moderna</option>
+<option value="movil">Móvil</option>
+<option value="compacta_2000s">Compacta digital 2000s</option>
+<option value="polaroid">Polaroid</option>
+<option value="vhs">VHS</option>
+<option value="vigilancia">Cámara de vigilancia</option></select></label><label>Tratamiento visual<select id="visualTreatment"><option value="natural">Color natural</option>
+<option value="suaves">Tonos suaves</option>
+<option value="calidos">Tonos cálidos</option>
+<option value="frios">Tonos fríos</option>
+<option value="neutros">Tonos neutros</option>
+<option value="apagados">Colores apagados</option>
+<option value="grano_pelicula">Grano de película</option>
+<option value="alto_contraste">Alto contraste</option>
+<option value="bajo_contraste">Bajo contraste</option>
+<option value="mate">Acabado mate</option>
+<option value="desaturado">Desaturado</option>
+<option value="rico">Color rico</option>
+<option value="bn">Blanco y negro</option>
+<option value="sepia">Sepia</option>
+<option value="kodak_portra">Kodak Portra</option>
+<option value="fuji_400h">Fuji Pro 400H</option>
+<option value="cine_moderno">Cine moderno</option>
+<option value="cine_90">Cine años 90</option></select></label><label>Referencia fotográfica<select id="photoReference"><option value="ninguna">Ninguna</option>
+<option value="documental_flash_color">Documental social con flash y color saturado</option>
+<option value="retrato_frontal_neutro">Retrato frontal neutro y psicológico</option>
+<option value="cinematografica_escenificada">Escena cinematográfica cuidadosamente escenificada</option>
+<option value="drama_domestico_nocturno">Drama doméstico nocturno e inquietante</option>
+
+</select></label></div></section>
+<section><h2>Random y presets</h2><button type="button" onclick="return randomize('scene')">Random escena</button><button type="button" onclick="return randomize('look')">Random look</button><button type="button" onclick="return randomize('balanced')">Random completo</button><button type="button" onclick="return randomize('conservative')">Random conservador</button><button type="button" id="savePresetBtn">Guardar preset</button><button type="button" id="loadPresetBtn">Cargar preset</button><button type="button" id="duplicatePresetBtn">Duplicar preset</button><button type="button" id="deletePresetBtn">Eliminar preset</button></section>
+<section><h2>Referencias</h2><div id="referenceImageNotice" style="padding:12px;border:2px solid #ded4c8;border-radius:12px;background:white;font-weight:800">📷 1 imagen necesaria — IMAGE A = protagonista</div></section><section><h2>Prompt</h2><button type="button" class="primary" onclick="return generatePrompt()">Generar prompt</button><button type="button" onclick="return copyPrompt()">Copiar</button><button type="button" onclick="return downloadPrompt()">Descargar TXT</button><textarea id="output"></textarea></section></main><dialog id="presetDialog" class="preset-dialog"><div class="preset-dialog-inner"><h3 id="presetDialogTitle">Cargar preset</h3><select id="presetSelect"></select><div class="preset-dialog-actions"><button type="button" onclick="closePresetDialog()">Cancelar</button><button type="button" class="primary" onclick="confirmPresetDialog()">Aceptar</button></div></div></dialog></body></html>
